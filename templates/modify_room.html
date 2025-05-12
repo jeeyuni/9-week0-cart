@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>정글 파티메이커</title>
+  </head>
+  <body>
+    <h1>파티 수정하기</h1>
+    <form action="/rooms/{{room['_id']}}/modify" method="post">
+      <label for="title">제목</label>
+      <input type="text" name="title" id="title" value="{{room["title"]}}"/>
+
+      <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
+      <label for="max_count">인원수</label>
+      <input type="number" name="max_count" id="max_count"
+      value="{{room["max_count"]}}"/>
+      <label for="category">분류</label>
+      <select name="category" id="category">
+        {% for cat in categories %}
+        <option value="{{cat}}" {% if cat == room["category"] %} selected {% endif %}>{{cat}}</option>
+        {% endfor %}
+      </select>
+      <button>수정하기</button>
+    </form>
+    <a href="/rooms">돌아가기</a>
+  </body>
+</html>
