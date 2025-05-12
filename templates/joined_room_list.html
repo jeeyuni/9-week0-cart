@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>정글 파티메이커</title>
+  </head>
+  <body>
+    <h1>신청한 파티</h1>
+    <h2>확정된 파티</h2>
+    {% for room in confirmed %}
+    <ul>
+      <li>모임이름: {{room["title"]}}</li>
+      <li>카테고리: {{room["category"]}}</li>
+      <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
+      <li>호스트: 작업중</li>
+      <li>참여인원: 작업중</li>
+    </ul>
+    {% endfor %}
+    <h2>모집중인 파티</h2>
+    {% for room in not_confirmed %}
+    <ul>
+      <li>모임이름: {{room["title"]}}</li>
+      <li>카테고리: {{room["category"]}}</li>
+      <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
+      <li>호스트: 작업중</li>
+      <li>참여인원: 작업중</li>
+    </ul>
+
+    <!-- 이용자가 호스트일 때 -->
+    <a href="/rooms/{{room['_id']}}/modify">수정하기</a>
+    <form action="/rooms/{{room['_id']}}/delete" method="post">
+      <button>삭제하기</button>
+    </form>
+    <form action="/rooms/{{room['_id']}}/confirm" method="post">
+      <button>확정하기</button>
+    </form>
+
+    <!-- 이용자가 호스트가 아닐 때 -->
+    <!-- <form action="/rooms/{{room['id']}}/exit">
+      <button>퇴장하기</button>
+    </form> -->
+
+    {% endfor %}
+    <br />
+    <a href="/rooms/create">파티 만들기</a>
+    <br />
+    <a href="/rooms">파티 참여하기</a>
+  </body>
+</html>

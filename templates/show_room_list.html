@@ -6,7 +6,8 @@
     <title>정글 파티메이커</title>
   </head>
   <body>
-    {% for room in rooms %}
+    <h1>파티 참가하기</h1>
+    {% for room in not_confirmed %}
     <ul>
       <li>모임이름: {{room["title"]}}</li>
       <li>카테고리: {{room["category"]}}</li>
@@ -15,16 +16,13 @@
       <li>참여인원: 작업중</li>
     </ul>
 
-    <!-- 인원수 꽉찼거나, 이미 참여한 경우 비활성화 -->
-    <!-- <button>참여하기</button> -->
-
-    <a href="/rooms/{{room['_id']}}/modify">수정하기</a>
-    <form action="/rooms/{{room['_id']}}/delete" method="post">
-      <button>삭제하기</button>
+    <form action="/rooms/{{room['_id']}}/join" method="post">
+        <!-- 이미 참여한 경우에도 disable해야 함-->
+      <button {% if room["user_count"] >= room["max_count"] %} disabled {% endif %}>참여하기</button>
     </form>
 
     {% endfor %}
     <br />
-    <a href="/rooms/create">파티 만들기</a>
+    <a href="/users/rooms">파티 수정하기</a>
   </body>
 </html>
