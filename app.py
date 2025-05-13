@@ -70,7 +70,7 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None):
 
 @app.route("/")
 def home():
-    return redirect(url_for('get_rooms'))
+    return render_template("login.html")
 
 # 파티 찾기 (GET) - 유저 빼고 완성
 @app.route("/rooms", methods=["GET"])
@@ -170,7 +170,7 @@ def signup():
 
 @app.route("/testpage")
 def testpage():
-    return render_template("testpage.html")
+    return render_template("show_room_list.html")
 
 @app.route("/users/register", methods=['POST'])
 def register():
