@@ -1,29 +1,184 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>정글 파티메이커</title>
-  </head>
-  <body>
-    <a href="/rooms">파티 찾기</a>
-    <a href="/users/rooms">신청한 파티</a>
-    <a href="/rooms/create">파티 만들기</a>
 
-    <h1>파티 찾기</h1>
-    {% for room in not_confirmed %}
-    <ul>
-      <li>모임이름: {{room["title"]}}</li>
-      <li>카테고리: {{room["category"]}}</li>
-      <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
-      <li>호스트: 작업중</li>
-      <li>참여인원: 작업중</li>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정글 파티메이커</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    crossorigin="anonymous">
+
+  <style>
+    body {
+      margin: 0;
+      padding-top: 70px;
+      font-family: "IBM Plex Sans KR", "Pretendard", sans-serif;
+    }
+    .navbar .nav-link {
+      color: rgb(97, 211, 131);
+    }
+
+    .navbar .nav-link.active {
+      font-weight: bold;
+      color: black;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      min-height: calc(100vh - 70px);
+    }
+
+    .party-container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card-deck {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .card {
+      max-width: 18rem;
+      margin-bottom: 20px;
+    }
+
+
+    .card ul {
+      padding-left: 16px;
+    }
+
+    .card-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 30px;
+    }
+
+    .card-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: flex-start;
+    }
+
+    .card {
+      width: 18rem;
+      margin-bottom: 20px;
+    }
+
+    .gap-2 {
+      gap: 0.5rem;
+      /* 버튼 사이의 간격 */
+    }
+
+    .m-0 {
+      margin: 0 !important;
+    }
+
+    .flex-grow-1 {
+      flex-grow: 1;
+    }
+
+    .w-100 {
+      width: 100%;
+    }
+
+    .btn {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.9rem;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- NavBar -->
+  <nav class="navbar navbar-light bg-light fixed-top">
+    <span class="navbar-brand mb-0 h1">정글 파티만들기</span>
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link active" href="/rooms">파티 찾기</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/rooms">들어간 파티</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link " href="/rooms/create">파티 만들기</a>
+      </li>
+      <!-- 로그아웃 나중에 설정하기 -->
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">로그아웃</a>
+      </li>
     </ul>
+  </nav>
 
-    <!-- 이미 참여한 경우에도 disable해야 함-->
-    <button {% if room["user_count"] >= room["max_count"] %} disabled {% endif %} onclick="join('{{room['_id']}}')">참여하기</button>
+  <div class="main">
+    <div class="party-container">
+      <div class="card-wrapper">
+        <!-- {% for room in not_confirmed %} -->
+        <div class="card">
+          <div class="card-body">
+            <!-- 상단: 이모지 + 파티명 + 인원수 -->
+            <div class="d-flex align-items-center mb-3">
+              <div style="font-size: 2.5rem; margin-right: 10px;">🎉</div>
+              <div>
+                <h5 class="card-title mb-1">{{ room["title"] }}</h5>
+                <div style="font-size: 0.9rem;">인원수: {{ room["user_count"] }} / {{ room["max_count"] }}</div>
+              </div>
+            </div>
+            <!-- 하단 정보 -->
+            <ul class="card-list">
+              <li>호스트: 작업중</li>
+              <li>장소: {{ room["location"] }}</li>
+              <li>시간: {{ room["time"] }}</li>
+              <li>카테고리: {{ room["category"] }}</li>
+            </ul>
+            <div class="d-flex justify-content-between gap-2">
+              <a class="submit btn btn-light w-100" href="/rooms/{{room['_id']}}">참가하기</a>
+            </div>
+          </div>
+        </div>
+        <!-- {% endfor %} -->
+  <!-- {% for room in not_confirmed %} -->
+        <div class="card">
+          <div class="card-body">
+            <!-- 상단: 이모지 + 파티명 + 인원수 -->
+            <div class="d-flex align-items-center mb-3">
+              <div style="font-size: 2.5rem; margin-right: 10px;">🎉</div>
+              <div>
+                <h5 class="card-title mb-1">{{ room["title"] }}</h5>
+                <div style="font-size: 0.9rem;">인원수: {{ room["user_count"] }} / {{ room["max_count"] }}</div>
+              </div>
+            </div>
+            <!-- 하단 정보 -->
+            <ul class="card-list">
+              <li>호스트: 작업중</li>
+              <li>장소: {{ room["location"] }}</li>
+              <li>시간: {{ room["time"] }}</li>
+              <li>카테고리: {{ room["category"] }}</li>
+            </ul>
+            <div class="d-flex justify-content-between gap-2">
+              <a class="submit btn btn-light w-100" href="/rooms/{{room['_id']}}">참가하기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    {% endfor %}
-    <br />
-  </body>
+  <!-- 이미 참여한 경우에도 disable해야 함-->
+  <button {% if room["user_count"]>= room["max_count"] %} disabled {% endif %}
+    onclick="join('{{room['_id']}}')">참여하기</button>
+
+  <!-- {% endfor %} -->
+  <br />
+</body>
+
 </html>
