@@ -57,8 +57,8 @@ def register():
     if not email or '@' not in email or '.' not in email:
         return jsonify({'message': '올바른 이메일 형식이 아닙니다.'}), 400
 
-    if not phonenumber or len(phonenumber) > 12:
-        return jsonify({'message': '휴대폰 번호는 12자 이하여야 합니다.'}), 400
+    if len(phonenumber) not in [10, 11]:
+        return jsonify({'message': '휴대폰 번호는 10자리 또는 11자리여야 합니다.'}), 400
 
     if not password or len(password) < 6:
         return jsonify({'message': '비밀번호는 6자 이상이어야 합니다.'}), 400

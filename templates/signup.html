@@ -17,7 +17,7 @@
 
     <input type="text" id="name" placeholder="이름을 입력하세요" />
     <input type="text" id="email" placeholder="이메일을 입력하세요" />
-    <input type="text" id="phonenumber" placeholder="연락처를 입력하세요" />
+    <input type="number" id="phonenumber" placeholder="연락처를 입력하세요" />
     <input type="password" id="password" placeholder="비밀번호를 입력하세요" />
     <input type="password" id="confirm-password" placeholder="비밀번호를 확인하세요" />
     <button onclick="register()">회원가입</button>
@@ -26,7 +26,6 @@
 
   <script>
     function register() {
-      //입력 값 가져오기
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
