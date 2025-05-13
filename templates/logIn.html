@@ -18,7 +18,28 @@
   </h1>
 
   <script>
-    
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      fetch('/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.token) {
+            alert('로그인 성공')
+            //로그인 성공시 토큰을 저장
+            localStorage.setItem('token', data.token);
+          } else {
+            alert(data.message);
+          }
+        });
+    }
   </script>
 </body>
 

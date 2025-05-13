@@ -41,9 +41,22 @@ def signup():
 def register():
     name = request.json.get('name')
     email = request.json.get('email')
+    phonenumber = request.json.get('phonenumber')
     password = request.json.get('password')
     confirm_password = request.json.get('confirm_password')
     
+    if not name or len(name) < 2:
+        return jsonify({'message': '이름은 두 글자 이상이어야 합니다.'}), 400
+
+    if not email or '@' not in email or '.' not in email:
+        return jsonify({'message': '올바른 이메일 형식이 아닙니다.'}), 400
+
+    if not phonenumber or len(phonenumber) > 12:
+        return jsonify({'message': '휴대폰 번호는 12자 이하여야 합니다.'}), 400
+
+    if not password or len(password) < 6:
+        return jsonify({'message': '비밀번호는 6자 이상이어야 합니다.'}), 400
+
     if password != confirm_password:
         return jsonify({'message': '비밀번호가 일치하지 않습니다.'}), 400
 
@@ -57,7 +70,8 @@ def register():
     new_user = {
         'name' : name,
         'email' : email,
-        'password' : password
+        'password' : hashed_password,
+        'phonenumber' : phonenumber
     }
     users_collection.insert_one(new_user)
 
@@ -65,8 +79,8 @@ def register():
 
 @app.route("/users/login", methods=['POST'])
 def login():
-    email = request.json.get['email']
-    password = request.json.get['password']
+    email = request.json.get('email')
+    password = request.json.get('password')
 
     user = users_collection.find_one({'email': email})
     if not user:
@@ -79,9 +93,10 @@ def login():
             # 토큰 유효 시간 = 현재시간을 가지고 옴 + 1시간 
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         }, app.config['SECRET_KEY'], algorithm='HS256')
+
         return jsonify({'message': '로그인 성공', 'token': token}), 200
-    
-    return jsonify({'messsage': '비밀번호가 잘못되었습니다.'}), 400
+    else:
+        return jsonify({'messsage': '비밀번호가 잘못되었습니다.'}), 400
 
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)
