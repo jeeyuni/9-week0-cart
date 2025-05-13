@@ -1,3 +1,15 @@
+function logout() {
+  $.ajax({
+    type: "POST",
+    url: "/users/logout",
+    success: function () {
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Strict";
+      window.location.href = "/";
+    },
+  });
+}
+
 $(".deleteForm").submit(function (event) {
   let confirmed = confirm("정말 삭제하시겠습니까?");
   if (!confirmed) {

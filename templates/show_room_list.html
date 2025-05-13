@@ -6,9 +6,11 @@
     <title>정글 파티메이커</title>
   </head>
   <body>
+    <p>안녕하세요, {{user["name"]}}님!!</p>
     <a href="/rooms">파티 찾기</a>
     <a href="/users/rooms">신청한 파티</a>
     <a href="/rooms/create">파티 만들기</a>
+    <button onclick="logout()">로그아웃</button>
 
     <h1>파티 찾기</h1>
     {% for room in not_confirmed %}
@@ -25,5 +27,11 @@
 
     {% endfor %}
     <br />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/static/app.js"></script>
   </body>
 </html>

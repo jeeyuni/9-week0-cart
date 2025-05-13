@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, g, abort
 from flask.json.provider import JSONProvider
 from bson import ObjectId
 from flask_bcrypt import Bcrypt
@@ -68,6 +68,27 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None):
         else:
             return list(db.rooms.aggregate(pipeline))
 
+# 쿠키 확인해 JWT토큰 확인
+@app.before_request
+def check_jwt():
+    # 쿠키에서 JWT 토큰 가져오기
+    token = request.cookies.get('token')
+    print(f"token: {token}")
+    
+    if token:
+        try:
+            # JWT 토큰을 디코딩하고 유효성을 검사
+            payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            # 유효한 토큰이면 request.user에 저장 (사용자 정보로 활용 가능)
+            user = db.users.find_one({'_id': ObjectId(payload["_id"])})
+            g.user = user
+        except jwt.ExpiredSignatureError:
+            g.user = None
+        except jwt.InvalidTokenError:
+            g.user = None
+    else:
+        g.user = None
+
 @app.route("/")
 def home():
     return render_template("login.html")
@@ -75,8 +96,9 @@ def home():
 # 파티 찾기 (GET) - 유저 빼고 완성
 @app.route("/rooms", methods=["GET"])
 def get_rooms():
+    check_jwt()
     not_confirmed = get_rooms_set_confirmed(False)
-    return render_template("show_room_list.html", not_confirmed=not_confirmed)
+    return render_template("show_room_list.html", not_confirmed=not_confirmed, user=g.user)
 
 # 신청한 파티 확인하기 (GET) - 유저 빼고 완성
 @app.route("/users/rooms", methods=["GET"])
@@ -227,6 +249,7 @@ def login():
     if bcrypt.check_password_hash(user['password'], password):
         # JWT 토큰 발급
         token = jwt.encode({
+            '_id': str(user["_id"]),
             'email': email,
             # 토큰 유효 시간 = 현재시간을 가지고 옴 + 1시간 
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
@@ -235,6 +258,12 @@ def login():
         return jsonify({'message': '로그인 성공', 'token': token}), 200
     else:
         return jsonify({'message': '비밀번호가 잘못되었습니다.'}), 400
+    
+# 로그아웃 (POST)
+@app.route("/users/logout", methods=["POST"])
+def logout():
+    print("어떻게든된다")
+    return jsonify({"message": "로그아웃 성공"})
 
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)

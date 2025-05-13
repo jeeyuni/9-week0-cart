@@ -1,60 +1,78 @@
 <!DOCTYPE html>
 <html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입 페이지</title>
+    <style></style>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>회원가입 페이지</title>
-  <style>
-  </style>
-</head>
+  <body>
+    <h1>
+      <!-- pip install flask-bcrypt pyjwt -->
+      <!-- flask-bcrypt -> 사용자의 비밀번호를 안전하게 해싱하고 비밀번호 검증을 할 수 있게 해주는 패키지 -->
+      <!-- pyjwt -> jwt를 검증하고 사용 -->
 
-<body>
-  <h1>
-    <!-- pip install flask-bcrypt pyjwt -->
-    <!-- flask-bcrypt -> 사용자의 비밀번호를 안전하게 해싱하고 비밀번호 검증을 할 수 있게 해주는 패키지 -->
-    <!-- pyjwt -> jwt를 검증하고 사용 -->
+      <input type="text" id="name" placeholder="이름을 입력하세요" />
+      <input type="text" id="email" placeholder="이메일을 입력하세요" />
+      <input type="number" id="phonenumber" placeholder="연락처를 입력하세요" />
+      <input
+        type="password"
+        id="password"
+        placeholder="비밀번호를 입력하세요"
+      />
+      <input
+        type="password"
+        id="confirm-password"
+        placeholder="비밀번호를 확인하세요"
+      />
+      <button onclick="register()">회원가입</button>
+      <button onclick="window.location.href='/'">뒤로가기</button>
+    </h1>
 
-    <input type="text" id="name" placeholder="이름을 입력하세요" />
-    <input type="text" id="email" placeholder="이메일을 입력하세요" />
-    <input type="number" id="phonenumber" placeholder="연락처를 입력하세요" />
-    <input type="password" id="password" placeholder="비밀번호를 입력하세요" />
-    <input type="password" id="confirm-password" placeholder="비밀번호를 확인하세요" />
-    <button onclick="register()">회원가입</button>
-    <button onclick="window.location.href='/'">뒤로가기</button>
-  </h1>
+    <script>
+      function register() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const phonenumber = document.getElementById("phonenumber").value;
+        const confirmPassword =
+          document.getElementById("confirm-password").value;
 
-  <script>
-    function register() {
-      const name = document.getElementById("name").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const phonenumber = document.getElementById("phonenumber").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
+        //포스트 요청
+        fetch("/users/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //요청 본문을 사용자 입력값을 JSON 형태로 담아 전송
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            phonenumber,
+            confirm_password: confirmPassword,
+          }),
+        })
+          .then((response) => response.json()) //서버 응답을 JSON으로 파싱
+          .then((data) => {
+            //메세지가 있다면 알림 창으로 표시
+            if (data.message) {
+              alert(data.message);
 
-      //포스트 요청
-      fetch('/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        //요청 본문을 사용자 입력값을 JSON 형태로 담아 전송
-        body: JSON.stringify({ name, email, password, phonenumber, confirm_password: confirmPassword })
-      })
-        .then(response => response.json()) //서버 응답을 JSON으로 파싱
-        .then(data => {
-          //메세지가 있다면 알림 창으로 표시
-          if (data.message) {
-            alert(data.message);
-
-            //회원가입이 되었다면 로그인 페이지로 이동
-            if (data.message === "회원가입에 성공하셨습니다.") {
-              window.location.href = "/";
+              //회원가입이 되었다면 로그인 페이지로 이동
+              if (data.message === "회원가입에 성공하셨습니다.") {
+                window.location.href = "/";
+              }
             }
-          }
-        });
-    }
-  </script>
-</body>
-
+          });
+      }
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/static/app.js"></script>
+  </body>
 </html>
