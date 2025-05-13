@@ -150,12 +150,7 @@
               <li>카테고리: {{ room["category"] }}</li>
             </ul>
             <div class="d-flex justify-content-between gap-2">
-              <form action="/rooms/{{room['_id']}}/confirm" method="post" class="confirmForm m-0 flex-grow-1">
-                <button type="submit" class="btn btn-light w-100">확정하기</button>
-              </form>
-              <form action="/rooms/{{room['_id']}}/delete" method="post" class="deleteForm m-0 flex-grow-1">
-                <button type="submit" class="btn btn-light w-100">삭제하기</button>
-              </form>
+              <a class="btn btn-light w-100" href="/rooms/{{room['_id']}}">세부사항</a>
             </div>
           </div>
         </div>
