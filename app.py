@@ -162,16 +162,17 @@ def post_confirm(rooms_id):
                         {"$set": {'confirmed': True}})
     return redirect(url_for('get_user_rooms'))
 
-    return render_template("logIn.html")
-
+# 회원가입 화면 (GET)
 @app.route("/signup")
 def signup():
     return render_template("signup.html")
 
+# 로그인 성공 (GET)
 @app.route("/testpage")
 def testpage():
-    return render_template("show_room_list.html")
+    return redirect(url_for("get_rooms"))
 
+# 회원가입 (POST)
 @app.route("/users/register", methods=['POST'])
 def register():
     name = request.json.get('name')
@@ -212,6 +213,7 @@ def register():
 
     return jsonify({'message' : '회원가입에 성공하셨습니다.'}), 201
 
+# 로그인 (POST)
 @app.route("/users/login", methods=['POST'])
 def login():
     # 로그인시 토큰 발급
