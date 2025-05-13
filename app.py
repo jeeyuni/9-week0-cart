@@ -238,13 +238,17 @@ def post_modify(rooms_id):
     title = request.form.get("title")
     max_count = int(request.form.get("max_count"))
     category = request.form.get("category")
+    time = request.form.get("time")
+    location = request.form.get("location")
     
     db.rooms.update_one(
         {"_id": ObjectId(rooms_id)},
         {"$set": {
             "title": title,
             "max_count": max_count,
-            "category": category
+            "category": category,
+            "time": time,
+            "location": location
         }}
     )
     
