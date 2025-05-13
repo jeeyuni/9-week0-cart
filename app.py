@@ -8,10 +8,12 @@ import datetime
 from pymongo import MongoClient
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'mysecretkey'
 client = MongoClient('localhost', 27017)
 db = client.dbroom
 users_collection = db.users
 bcrypt = Bcrypt(app)
+
 
 # ObjectID 타입 처리 -> string으로 변환
 class CustomJSONEncoder(json.JSONEncoder):
@@ -36,6 +38,10 @@ def home():
 @app.route("/signup")
 def signup():
     return render_template("signup.html")
+
+@app.route("/testpage")
+def testpage():
+    return render_template("testpage.html")
 
 @app.route("/users/register", methods=['POST'])
 def register():
@@ -79,6 +85,7 @@ def register():
 
 @app.route("/users/login", methods=['POST'])
 def login():
+    # 로그인시 토큰 발급
     email = request.json.get('email')
     password = request.json.get('password')
 
@@ -96,7 +103,7 @@ def login():
 
         return jsonify({'message': '로그인 성공', 'token': token}), 200
     else:
-        return jsonify({'messsage': '비밀번호가 잘못되었습니다.'}), 400
+        return jsonify({'message': '비밀번호가 잘못되었습니다.'}), 400
 
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)

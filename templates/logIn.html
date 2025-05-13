@@ -31,10 +31,12 @@
       })
         .then(response => response.json())
         .then(data => {
+          // 토큰이 있다면 로그인
           if (data.token) {
             alert('로그인 성공')
             //로그인 성공시 토큰을 저장
             localStorage.setItem('token', data.token);
+            window.location.href = '/testpage';
           } else {
             alert(data.message);
           }
