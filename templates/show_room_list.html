@@ -1,41 +1,20 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>정글 파티메이커</title>
-  </head>
-  <body>
-    <p>안녕하세요, {{user["name"]}}님!!</p>
-    <a href="/rooms">파티 찾기</a>
-    <a href="/users/rooms">신청한 파티</a>
-    <a href="/rooms/create">파티 만들기</a>
-    <button onclick="logout()">로그아웃</button>
+{% extends "base.html" %} {% block content %}
+<h1>파티 찾기</h1>
+{% for room in not_confirmed %}
+<ul>
+  <li>모임이름: {{room["title"]}}</li>
+  <li>카테고리: {{room["category"]}}</li>
+  <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
+  <li>호스트: {{room["host_name"]}}</li>
+  <li>장소: {{room["location"]}}</li>
+  <li>시간: {{room["time"]}}</li>
+</ul>
 
-    <h1>파티 찾기</h1>
-    {% for room in not_confirmed %}
-    <ul>
-      <li>모임이름: {{room["title"]}}</li>
-      <li>카테고리: {{room["category"]}}</li>
-      <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
-      <li>호스트: {{room["host_name"]}}</li>
-      <li>장소: {{room["location"]}}</li>
-      <li>시간: {{room["time"]}}</li>
-    </ul>
-
-    <!-- 이미 참여한 경우에도 disable해야 함-->
-    {%if room["user_in_room"] %}
-    <button disabled>신청 완료</button>
-    {% elif room["user_count"] >= room["max_count"] %}
-    <button disabled>정원 초과</button>
-    {% else %}
-    <button onclick="join('{{room['_id']}}')">참여하기</button>
-    {% endif %} {% endfor %}
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="/static/app.js"></script>
-  </body>
-</html>
+<!-- 이미 참여한 경우에도 disable해야 함-->
+{%if room["user_in_room"] %}
+<button disabled>신청 완료</button>
+{% elif room["user_count"] >= room["max_count"] %}
+<button disabled>정원 초과</button>
+{% else %}
+<button onclick="join('{{room['_id']}}')">참여하기</button>
+{% endif %} {% endfor %} {% endblock %}
