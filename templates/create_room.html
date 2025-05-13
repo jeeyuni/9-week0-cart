@@ -6,6 +6,7 @@
     <title>정글 파티메이커</title>
   </head>
   <body>
+    <p>안녕하세요, {{user["name"]}}님!!</p>
     <a href="/rooms">파티 찾기</a>
     <a href="/users/rooms">신청한 파티</a>
     <a href="/rooms/create">파티 만들기</a>
@@ -14,16 +15,15 @@
     <h1>파티 만들기</h1>
     <form action="/rooms/create" , method="post">
       <label for="title">제목</label>
-      <input type="text" name="title" id="title" />
+      <input type="text" name="title" id="title" required />
       <label for="location">장소</label>
-      <input type="text" name="location" id="location" />
+      <input type="text" name="location" id="location" required />
       <label for="time">시간</label>
-      <input type="datetime-local" id="time" name="time" />
+      <input type="datetime-local" id="time" name="time" required />
       <label for="max_count">인원수</label>
-      <input type="number" name="max_count" id="max_count" />
-      <label for=""></label>
+      <input type="number" name="max_count" id="max_count" required />
       <label for="category">분류</label>
-      <select name="category" id="category">
+      <select name="category" id="category" required>
         <option value="운동">운동</option>
         <option value="음식">음식</option>
         <option value="공동 구매">공동 구매</option>
@@ -32,7 +32,6 @@
       </select>
       <button>만들기</button>
     </form>
-    <a href="/rooms">돌아가기</a>
     <script
       src="https://code.jquery.com/jquery-3.7.1.min.js"
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="

@@ -13,18 +13,30 @@
       <!-- flask-bcrypt -> 사용자의 비밀번호를 안전하게 해싱하고 비밀번호 검증을 할 수 있게 해주는 패키지 -->
       <!-- pyjwt -> jwt를 검증하고 사용 -->
 
-      <input type="text" id="name" placeholder="이름을 입력하세요" />
-      <input type="text" id="email" placeholder="이메일을 입력하세요" />
-      <input type="number" id="phonenumber" placeholder="연락처를 입력하세요" />
+      <input type="text" id="name" placeholder="이름을 입력하세요" required />
+      <input
+        type="text"
+        id="email"
+        placeholder="이메일을 입력하세요"
+        required
+      />
+      <input
+        type="number"
+        id="phonenumber"
+        placeholder="연락처를 입력하세요"
+        required
+      />
       <input
         type="password"
         id="password"
         placeholder="비밀번호를 입력하세요"
+        required
       />
       <input
         type="password"
         id="confirm-password"
         placeholder="비밀번호를 확인하세요"
+        required
       />
       <button onclick="register()">회원가입</button>
       <button onclick="window.location.href='/'">뒤로가기</button>

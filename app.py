@@ -14,7 +14,6 @@ db = client.dbroom
 users_collection = db.users
 bcrypt = Bcrypt(app)
 
-
 # ObjectID 타입 처리 -> string으로 변환
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -31,9 +30,9 @@ class CustomJSONProvider(JSONProvider):
 
 app.json = CustomJSONProvider(app)
 
-def get_rooms_set_confirmed(confirmed, rooms_id= None):
+def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False):
         pipeline = [
-            # confirmed가 False인 도큐먼트만
+            # confirmed의 True/False 여부 설정
             {
                 "$match": {
                     "confirmed": confirmed,
@@ -45,7 +44,28 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None):
                     "from": "join_user",
                     "localField": "_id",
                     "foreignField": "room_id",
-                    "as": "users"
+                    "as": "users_list"
+                }
+            },
+            {
+                "$match": {
+                    "users_list.user_id": ObjectId(g.user["_id"]) if user_check else {"$exists": True}
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "host",
+                    "foreignField": "_id",
+                    "as": "host_id"
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "users_list.user_id",
+                    "foreignField": "_id",
+                    "as": "user_details"
                 }
             },
             # 하단 필드 선택
@@ -53,8 +73,26 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None):
                 "$project": {
                     "title": 1,
                     "category": 1,
+                    "user_count": 1,
                     "max_count": 1,
-                    "user_count": {"$size": "$users"}
+                    "location": 1,
+                    "time": 1,
+                    "host_id": {
+                        "$arrayElemAt": ["$host_id._id", 0]
+                    },
+                    "user_details": 1,
+                    "host_name": {
+                        "$arrayElemAt": ["$host_id.name", 0]
+                    },
+                    "user_in_room": {
+                    "$cond": {
+                        "if": {
+                            "$in": [ObjectId(g.user["_id"]), "$users_list.user_id"]
+                        },
+                        "then": True,
+                        "else": False
+                    }
+                }
                 }
             }
         ]
@@ -66,14 +104,20 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None):
             return result[0] 
         # 리스트를 return
         else:
-            return list(db.rooms.aggregate(pipeline))
-
+            result = list(db.rooms.aggregate(pipeline))
+            return result
+        
 # 쿠키 확인해 JWT토큰 확인
 @app.before_request
 def check_jwt():
+    public_paths = ['/users/login', '/users/register', '/signup']
+    
+    for p in public_paths:
+        if request.path == p:
+            return  # 로그인 안 해도 접근 허용
+    
     # 쿠키에서 JWT 토큰 가져오기
     token = request.cookies.get('token')
-    print(f"token: {token}")
     
     if token:
         try:
@@ -86,49 +130,111 @@ def check_jwt():
             g.user = None
         except jwt.InvalidTokenError:
             g.user = None
+
     else:
         g.user = None
+        
+    if g.user is None:
+        return redirect(url_for('get_login'))
 
+
+# 미로그인시 로그인 화면, 로그인시 파티 찾기 화면
 @app.route("/")
 def home():
+    if g.user:
+        return redirect(url_for('get_rooms'))
+    else:
+        return redirect(url_for('get_login'))
+
+@app.route("/users/login")
+def get_login():
     return render_template("login.html")
 
-# 파티 찾기 (GET) - 유저 빼고 완성
+# 파티 찾기 (GET)
 @app.route("/rooms", methods=["GET"])
 def get_rooms():
-    check_jwt()
     not_confirmed = get_rooms_set_confirmed(False)
     return render_template("show_room_list.html", not_confirmed=not_confirmed, user=g.user)
 
-# 신청한 파티 확인하기 (GET) - 유저 빼고 완성
+# 신청한 파티 확인하기 (GET)
 @app.route("/users/rooms", methods=["GET"])
 def get_user_rooms():
-    confirmed = get_rooms_set_confirmed(True)
-    not_confirmed = get_rooms_set_confirmed(False)
-    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed)
+    confirmed = get_rooms_set_confirmed(True, user_check=True)
+    not_confirmed = get_rooms_set_confirmed(False, user_check=True)
+    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, user=g.user)
+
+# 파티 참여 (POST)
+@app.route("/rooms/join", methods=["POST"])
+def join():
+    user_id = ObjectId(g.user["_id"])
+    room_id = ObjectId(request.form.get("room_id"))
+    result = db.join_user.find_one({"user_id": user_id, "room_id": room_id})
+    
+    if result is not None:
+        return jsonify({'result': 'failure', 'message': '이미 참여한 파티입니다.'})
+    
+    room = db.rooms.find_one({"_id": room_id})
+    
+    if room["confirmed"]:
+        return jsonify({"result": "failure", "message": "확정된 파티엔 추가로 참여할 수 없습니다."})
+    
+
+    
+    room = db.rooms.find_one_and_update({
+        "_id": room_id,
+        "$expr": {"$lt": ["$user_count", "$max_count"]}
+    },
+    {
+        "$inc": {"user_count": 1}
+    })
+    
+    print(room)
+    
+    if room is None:
+        return jsonify({'result': 'failure', 'message': '정원이 초과되었습니다.'})
+    
+    db.join_user.insert_one({"user_id": user_id, "room_id": room_id})
+    return jsonify({'result': 'success', 'message': '신청되었습니다.'})
+        
+# 파티 퇴장 (POST)
+@app.route("/rooms/exit", methods=["POST"])
+def exit():
+    user_id = ObjectId(g.user["_id"])
+    room_id = ObjectId(request.form.get("room_id"))
+    db.join_user.delete_one({"user_id": user_id, "room_id": room_id})
+    db.rooms.update_one({"_id": room_id}, {"$inc": {"user_count": -1}})
+    return jsonify({"result": "success", "message": "퇴장하셨습니다."})
 
 # 파티 세부정보 확인하기 (GET)
 @app.route("/rooms/<rooms_id>", methods=["GET"])
 def get_room_detail(rooms_id):
+    
     room = get_rooms_set_confirmed(True, rooms_id=rooms_id)
-    return render_template("room_details.html", room=room)
+    return render_template("room_details.html", room=room, user=g.user)
 
 # 파티 만들기 화면 띄우기 (GET)
 @app.route("/rooms/create", methods=["GET"])
 def get_create():
-    return render_template("create_room.html")
+    return render_template("create_room.html", user=g.user)
 
 # 파티 수정하기 화면 띄우기 (GET)
 @app.route("/rooms/<rooms_id>/modify", methods=["GET"])
 def get_modify(rooms_id):
+    room = db.rooms.find_one({"_id": ObjectId(rooms_id)})
+    if g.user is None or g.user["_id"] != room["host"]:
+        return render_template("error.html")
+    
     categories = ["운동", "음식", "공동 구매", "외출", "기타"]
     room = db.rooms.find_one({"_id": ObjectId(rooms_id)})
-    return render_template("modify_room.html", room=room, categories=categories)
+    return render_template("modify_room.html", room=room, categories=categories, user=g.user)
 
 
 # 파티 수정하기 (POST)
 @app.route("/rooms/<rooms_id>/modify", methods=["POST"])
 def post_modify(rooms_id):
+    room = db.rooms.find_one({"_id": ObjectId(rooms_id)})
+    if g.user is None or g.user["_id"] != room["host"]:
+        return render_template("error.html")
     title = request.form.get("title")
     max_count = int(request.form.get("max_count"))
     category = request.form.get("category")
@@ -150,13 +256,18 @@ def post_create():
     title = request.form.get("title")
     max_count = int(request.form.get("max_count"))
     category = request.form.get("category")
+    time = request.form.get("time")
+    location = request.form.get("location")
     
     # rooms 콜렉션에 도큐먼트 추가
     new_room = {
         'title': title,
         'category': category,
+        'user_count': 1,
         'max_count': max_count,
-        'host': 'temp',
+        'host': ObjectId(g.user["_id"]),
+        'time': time,
+        'location': location,
         'confirmed': False
     }
     result = db.rooms.insert_one(new_room)
@@ -164,7 +275,7 @@ def post_create():
     # 중간 콜렉션에 도큐먼트 추가
     new_room_id = result.inserted_id
     new_join = {
-        'user_id': 'temp',
+        'user_id': ObjectId(g.user["_id"]),
         'room_id': ObjectId(new_room_id)
     }
     db.join_user.insert_one(new_join)
@@ -262,8 +373,9 @@ def login():
 # 로그아웃 (POST)
 @app.route("/users/logout", methods=["POST"])
 def logout():
-    print("어떻게든된다")
     return jsonify({"message": "로그아웃 성공"})
 
+
+            
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)
