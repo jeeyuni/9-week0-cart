@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>정글 파티메이커</title>
+    <title>정글 파티만들기</title>
   </head>
   <body>
     <a href="/rooms">파티 찾기</a>
     <a href="/users/rooms">신청한 파티</a>
     <a href="/rooms/create">파티 만들기</a>
 
-    <h1>파티 찾기</h1>
-    {% for room in not_confirmed %}
+    <h1>파티 세부사항: {{room["title"]}}</h1>
     <ul>
       <li>모임이름: {{room["title"]}}</li>
       <li>카테고리: {{room["category"]}}</li>
       <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
       <li>호스트: 작업중</li>
-      <li>참여인원: 작업중</li>
+      <li>장소: {{room["location"]}}</li>
+      <li>시간: {{room["time"]}}</li>
     </ul>
 
-    <!-- 이미 참여한 경우에도 disable해야 함-->
-    <button {% if room["user_count"] >= room["max_count"] %} disabled {% endif %} onclick="join('{{room['_id']}}')">참여하기</button>
+    <h1>참여 인원</h1>
+    <p>작업중</p>
 
-    {% endfor %}
-    <br />
+    <a href="/users/rooms">돌아가기</a>
   </body>
 </html>

@@ -6,15 +6,19 @@
     <title>정글 파티메이커</title>
   </head>
   <body>
-    <h1>파티 수정하기</h1>
+    <a href="/rooms">파티 찾기</a>
+    <a href="/users/rooms">신청한 파티</a>
+    <a href="/rooms/create">파티 만들기</a>
+
+    <h1>신청한 파티</h1>
     <form action="/rooms/{{room['_id']}}/modify" method="post">
       <label for="title">제목</label>
       <input type="text" name="title" id="title" value="{{room["title"]}}"/>
 
-      <!-- 신청 인원수보다 더 낮게 조절할 수 없음 (html상 구현 가능????) -->
+      <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
       <label for="max_count">인원수</label>
       <input type="number" name="max_count" id="max_count"
-      value="{{room["max_count"]}}"/>
+      value="{{room["max_count"]}}" min="{{room["user_count"]}}"/>
       <label for="category">분류</label>
       <select name="category" id="category">
         {% for cat in categories %}

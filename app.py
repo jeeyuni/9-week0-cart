@@ -25,7 +25,7 @@ class CustomJSONProvider(JSONProvider):
 
 app.json = CustomJSONProvider(app)
 
-def get_rooms_set_confirmed(confirmed):
+def get_rooms_set_confirmed(confirmed, rooms_id= None):
         pipeline = [
             # confirmed가 False인 도큐먼트만
             {
@@ -53,7 +53,14 @@ def get_rooms_set_confirmed(confirmed):
             }
         ]
         
-        return list(db.rooms.aggregate(pipeline))
+        # id로 1개만 return
+        if rooms_id is not None:
+            pipeline[0]["$match"]["_id"] = ObjectId(rooms_id)
+            result = list(db.rooms.aggregate(pipeline))
+            return result[0] 
+        # 리스트를 return
+        else:
+            return list(db.rooms.aggregate(pipeline))
 
 @app.route("/")
 def home():
@@ -72,6 +79,12 @@ def get_user_rooms():
     not_confirmed = get_rooms_set_confirmed(False)
     return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed)
 
+# 파티 세부정보 확인하기 (GET)
+@app.route("/rooms/<rooms_id>", methods=["GET"])
+def get_room_detail(rooms_id):
+    room = get_rooms_set_confirmed(True, rooms_id=rooms_id)
+    return render_template("room_details.html", room=room)
+
 # 파티 만들기 화면 띄우기 (GET)
 @app.route("/rooms/create", methods=["GET"])
 def get_create():
@@ -83,6 +96,7 @@ def get_modify(rooms_id):
     categories = ["운동", "음식", "공동 구매", "외출", "기타"]
     room = db.rooms.find_one({"_id": ObjectId(rooms_id)})
     return render_template("modify_room.html", room=room, categories=categories)
+
 
 # 파티 수정하기 (POST)
 @app.route("/rooms/<rooms_id>/modify", methods=["POST"])
