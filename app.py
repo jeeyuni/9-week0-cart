@@ -9,7 +9,8 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
-client = MongoClient('localhost', 27017)
+# client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@localhost',27017)
 db = client.dbroom
 users_collection = db.users
 bcrypt = Bcrypt(app)
@@ -237,4 +238,4 @@ def login():
         return jsonify({'message': '비밀번호가 잘못되었습니다.'}), 400
 
 if __name__ == '__main__':  
-   app.run('0.0.0.0',port=5000,debug=True)
+   app.run('0.0.0.0', port=5000, debug=True)
