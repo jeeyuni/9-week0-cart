@@ -86,7 +86,7 @@
         <div class="form-group row">
           <label for="party-title" class="col-sm-3 col-form-label">제목</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="party-title" name="title">
+            <input type="text" class = "form-control" name="title" id="party-title" value="{{room[" title"]}}" />
           </div>
         </div>
 
@@ -110,16 +110,17 @@
         <div class="form-group row">
           <label for="party-capacity" class="col-sm-3 col-form-label">인원수</label>
           <div class="col-sm-9">
-            <input type="number" class="form-control" id="party-capacity" name="capacity">
+             <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
+            <input type="number" class="form-control" name="max_count" id="party-capacity" value="{{room[" max_count"]}}" min="{{room[" user_count"]}}" />
           </div>
         </div>
 
         <!-- 분류 -->
         <div class="form-group row">
-          <label for="party-category" class="col-sm-3 col-form-label">분류</label>
+          <label for="category" class="col-sm-3 col-form-label">분류</label>
           <div class="col-sm-9">
-            <select class="form-control" id="party-category" name="category">
-              <option>운동</option>
+            <select class="form-control" id="category" name="category">
+              <option value="{{cat}}" {% if cat==room["category"] %} selected {% endif %}>{{cat}}</option>
               <option>음식</option>
               <option>공동 구매</option>
               <option>외출</option>
@@ -135,24 +136,7 @@
       <!-- 폼 끝 -->
     </div>
   </div>
-
-
-  <form action="/rooms/{{room['_id']}}/modify" method="post">
-    <label for="title">제목</label>
-    <input type="text" name="title" id="title" value="{{room[" title"]}}" />
-
-    <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
-    <label for="max_count">인원수</label>
-    <input type="number" name="max_count" id="max_count" value="{{room[" max_count"]}}" min="{{room[" user_count"]}}" />
-    <label for="category">분류</label>
-    <select name="category" id="category">
-      {% for cat in categories %}
-      <option value="{{cat}}" {% if cat==room["category"] %} selected {% endif %}>{{cat}}</option>
-      {% endfor %}
-    </select>
-    <button>수정하기</button>
   </form>
-  <a href="/rooms">돌아가기</a>
 </body>
 
 </html>
