@@ -1,36 +1,155 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>정글 파티메이커</title>
-  </head>
-  <body>
-    <a href="/rooms">파티 찾기</a>
-    <a href="/users/rooms">신청한 파티</a>
-    <a href="/rooms/create">파티 만들기</a>
 
-    <h1>파티 만들기</h1>
-    <form action="/rooms/create" , method="post">
-      <label for="title">제목</label>
-      <input type="text" name="title" id="title" />
-      <label for="location">장소</label>
-      <input type="text" name="location" id="location" />
-      <label for="time">시간</label>
-      <input type="datetime-local" id="time" name="time" />
-      <label for="max_count">인원수</label>
-      <input type="number" name="max_count" id="max_count" />
-      <label for=""></label>
-      <label for="category">분류</label>
-      <select name="category" id="category">
-        <option value="운동">운동</option>
-        <option value="음식">음식</option>
-        <option value="공동 구매">공동 구매</option>
-        <option value="외출">외출</option>
-        <option value="기타">기타</option>
-      </select>
-      <button>만들기</button>
-    </form>
-    <a href="/rooms">돌아가기</a>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정글 파티메이커</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+    crossorigin="anonymous">
+
+  <style>
+    * .ibm-plex-sans-kr-regular {
+      font-family: "IBM Plex Sans KR", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+
+    }
+    
+    body {
+      margin: 0;
+      padding-top: 70px; /* navbar 높이만큼 여백 */
+      font-family: "Pretendard", sans-serif;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 70px); /* navbar 제외한 높이 */
+    }
+
+    .party-container {
+      width: 100%;
+      max-width: 600px;
+      padding: 40px;
+    }
+
+
+    .navbar .nav-link {
+      color: rgb(97, 211, 131);
+    }
+
+    .navbar .nav-link.active {
+      font-weight: bold;
+      color: black;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: rgb(97, 211, 131);
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NavBar -->
+  <nav class="navbar navbar-light bg-light fixed-top">
+    <span class="navbar-brand mb-0 h1">정글 파티만들기</span>
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" href="/rooms">파티 찾기</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/rooms">들어간 파티</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="/rooms/create">파티 만들기</a>
+      </li>
+      <!-- 로그아웃 나중에 설정하기 -->
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">로그아웃</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- 중앙 정렬 컨텐츠 -->
+  <div class="main">
+    <div class="party-container">
+      <h1 class="title">파티 만들기</h1>
+
+      <!-- 폼 시작 -->
+      <form action="/rooms/create" method="post">
+        <!-- 제목 -->
+        <div class="form-group row">
+          <label for="party-title" class="col-sm-3 col-form-label">제목</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="party-title" name="title">
+          </div>
+        </div>
+
+        <!-- 장소 -->
+        <div class="form-group row">
+          <label for="party-location" class="col-sm-3 col-form-label">장소</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="party-location" name="location">
+          </div>
+        </div>
+
+        <!-- 시간 -->
+        <div class="form-group row">
+          <label for="party-time" class="col-sm-3 col-form-label">시간</label>
+          <div class="col-sm-9">
+            <input type="datetime-local" class="form-control" id="party-time" name="time">
+          </div>
+        </div>
+
+        <!-- 인원수 -->
+        <div class="form-group row">
+          <label for="party-capacity" class="col-sm-3 col-form-label">인원수</label>
+          <div class="col-sm-9">
+            <select class="form-control" id="party-capacity" name="capacity">
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 분류 -->
+        <div class="form-group row">
+          <label for="party-category" class="col-sm-3 col-form-label">분류</label>
+          <div class="col-sm-9">
+            <select class="form-control" id="party-category" name="category">
+              <option>운동</option>
+              <option>음식</option>
+              <option>공동 구매</option>
+              <option>외출</option>
+              <option>기타</option>
+            </select>
+          </div>
+        </div>
+
+        <!--  만들기 버튼 온클릭 추가해야함  -->
+        <button type="submit" class="btn btn-light btn-block btn-login">만들기</button>
+        <a class="btn btn-light btn-block btn-login" href="/rooms">뒤로가기</a>
+      </form>
+      <!-- 폼 끝 -->
+    </div>
+  </div>
+
+</body>
+
 </html>
