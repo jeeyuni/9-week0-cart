@@ -111,6 +111,9 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False):
 # 쿠키 확인해 JWT토큰 확인
 @app.before_request
 def check_jwt():
+    if request.path.startswith('/static'):
+        return
+    
     public_paths = ['/users/login', '/users/register', '/signup']
     
     for p in public_paths:
