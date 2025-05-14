@@ -30,7 +30,6 @@ body {
 .party-container {
   width: 100%;
   max-width: 1000px;
-  justify-content: center;
 }
 
 .title {
@@ -40,6 +39,15 @@ body {
   font-size: 4rem;
   font-weight: bold;
   padding: 50px;
+}
+
+.detail-title {
+  text-align: center;
+  margin-bottom: 15px;
+  color: rgb(97, 211, 131);
+  font-size: 4rem;
+  font-weight: bold;
+  padding: 30px;
 }
 
 .card-deck {
