@@ -41,11 +41,11 @@ def format_phoneno(phoneno_str):
     formatted = f"{phoneno_str[:3]}-{phoneno_str[3:7]}-{phoneno_str[7:]}"
     return formatted
 
-def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False, time="future"):
+def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False, time="future", time_sort=1):
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
     print(now)
     if time == "past":
-        time_expr = {"$lt": ["$time", now]}
+        time_expr = {"$lte": ["$time", now]}
     elif time == "future":
         time_expr = {"$gt": ["$time", now]}
     elif time == "both":
@@ -117,7 +117,7 @@ def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False, time="f
             }
         },
         {
-        "$sort": { "time": 1 }
+        "$sort": { "time": time_sort }
     }
     ]
     
@@ -188,7 +188,7 @@ def get_rooms():
 def get_user_rooms():
     confirmed = get_rooms_set_confirmed(True, user_check=True)
     not_confirmed = get_rooms_set_confirmed(False, user_check=True)
-    past = get_rooms_set_confirmed(True, user_check=True, time="past")
+    past = get_rooms_set_confirmed(True, user_check=True, time="past", time_sort=-1)
     return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, past=past, user=g.user, format_time=format_time)
 
 # 파티 참여 (POST)
