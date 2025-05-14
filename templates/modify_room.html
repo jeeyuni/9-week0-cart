@@ -2,18 +2,18 @@
 {% block content %}
 <h1>신청한 파티</h1>
 <form action="/rooms/{{room['_id']}}/modify" method="post">
-  <label for="title">제목</label>
-  <input type="text" name="title" id="title" value="{{room["title"]}}" required/>
-  <label for="location">장소</label>
-  <input type="text" name="location" id="location" value="{{room["location"]}}" required />
-  <label for="time">시간</label>
-  <input type="datetime-local" id="time" name="time" value="{{room["time"]}}" required />
+  <label for="fixtitle">제목</label>
+  <input type="text" name="title" id="fixtitle" value="{{room["title"]}}" required/>
+  <label for="fixlocation">장소</label>
+  <input type="text" name="location" id="fixlocation" value="{{room["location"]}}" required />
+  <label for="fixtime">시간</label>
+  <input type="datetime-local" id="fixtime" name="time" value="{{room["time"]}}" required />
   <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
-  <label for="max_count">인원수</label>
-  <input type="number" name="max_count" id="max_count"
+  <label for="fixmax_count">인원수</label>
+  <input type="number" name="max_count" id="fixmax_count"
   value="{{room["max_count"]}}" min="{{room["user_count"]}}" required/>
-  <label for="category">분류</label>
-  <select name="category" id="category" required>
+  <label for="fixcategory">분류</label>
+  <select name="category" id="fixcategory" required>
     {% for cat in categories %}
     <option value="{{cat}}" {% if cat == room["category"] %} selected {% endif %}>{{cat}}</option>
     {% endfor %}
@@ -21,4 +21,5 @@
   <button>수정하기</button>
 </form>
 <a href="/users/rooms">돌아가기</a>
+<script src="{{url_for('static', filename='formTime.js')}}"></script>
 {% endblock %}
