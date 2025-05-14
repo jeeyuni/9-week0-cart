@@ -13,9 +13,11 @@ function getTimeProp(plus) {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-document.getElementById("time").min = getTimeProp(0);
+if (document.getElementById("time")) {
+  document.getElementById("time").min = getTimeProp(0);
+  document.getElementById("time").value = getTimeProp(1);
+}
+
 if (document.getElementById("fixtime")) {
   document.getElementById("fixtime").min = getTimeProp(0);
 }
-
-document.getElementById("time").value = getTimeProp(1);
