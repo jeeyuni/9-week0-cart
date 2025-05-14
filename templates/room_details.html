@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}파티 세부사항{% endblock %} {% block
+content %}
+
+<div class="main">
+  <div class="mid-container">
+    <h1 class="detail-title">
+      {% if room["category"] == "운동"%}🏃{% elif room["category"] == "음식"%}🍗
+      {% elif room["category"] == "공동 구매"%}🛒 {% elif room["category"] ==
+      "외출"%}🚪 {% else %} 🎉 {% endif %}{{room["title"]}}
+    </h1>
+    <ul class="info-list">
+      <li><strong>카테고리:</strong> {{room["category"]}}</li>
+      <li><strong>장소:</strong> {{room["location"]}}</li>
+      <li><strong>시간:</strong> {{format_time(room["time"])}}</li>
+    </ul>
+
+    <h4 class="mb-3 green">
+      참여 인원 ({{room["user_count"]}} / {{room["max_count"]}})
+    </h4>
+    <div class="row row-cols-3">
+      {% for user in room["user_details"]%}
+      <div class="col phone-col">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-text mb-1">
+              <span class="h5">{{user["name"]}}</span>
+              {% if user["_id"] == room["host_id"] %}<span
+                class="badge badge-secondary"
+                >호스트</span
+              >{% endif %}
+            </div>
+            <div class="card-text">{{format_phoneno(user["phonenumber"])}}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <a class="btn btn-outline-success btn-block btn-login" href="/users/rooms"
+      >뒤로가기</a
+    >
+  </div>
+  {% endblock %}
+</div>

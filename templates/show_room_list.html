@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block title %}파티 찾기{% endblock %} {% block
+content %}
+
+<div class="main">
+  <div class="container-lg">
+    <h2 class="green">모집 중인 파티 ({{not_confirmed|length}})</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      {% for room in not_confirmed %}
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <!-- 상단: 이모지 + 파티명 + 인원수 -->
+            <div class="d-flex align-items-center mb-3">
+              <div style="font-size: 2.5rem; margin-right: 10px">
+                {% if room["category"] == "운동"%}🏃 {% elif room["category"] ==
+                "음식"%}🍗 {% elif room["category"] == "공동 구매"%}🛒 {% elif
+                room["category"] == "외출"%}🚪 {% else %} 🎉 {% endif %}
+              </div>
+              <div>
+                <h5 class="card-title mb-1">
+                  {{ room["title"] }} {% if g.user["_id"] == room["host_id"]
+                  %}<span class="badge badge-secondary">호스트</span>{% elif
+                  room["user_in_room"]%}<span class="badge badge-warning"
+                    >신청됨</span
+                  >{% endif %}
+                </h5>
+                <div style="font-size: 0.9rem">
+                  인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
+                </div>
+              </div>
+            </div>
+            <!-- 상단 정보 끝 -->
+
+            <!-- 하단 정보 -->
+            <ul class="card-list">
+              <li>호스트: {{room["host_name"]}}</li>
+              <li>장소: {{ room["location"] }}</li>
+              <li>시간: {{ format_time(room["time"]) }}</li>
+              <li>카테고리: {{ room["category"] }}</li>
+            </ul>
+            <!-- 하단 정보 끝 -->
+
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-between gap-2">
+              {%if room["user_in_room"] %} {%if g.user["_id"] ==
+              room["host_id"]%}
+              <button class="submit btn btn-light w-100" disabled>
+                호스트
+              </button>
+              {% else %}
+              <button
+                onclick="exit('{{room['_id']}}')"
+                class="submit btn btn-secondary w-100"
+              >
+                퇴장
+              </button>
+              {% endif %} {% elif room["user_count"] >= room["max_count"] %}
+              <button class="submit btn btn-light w-100" disabled>
+                정원 초과
+              </button>
+              {% else %}
+              <button
+                class="submit btn btn-success w-100"
+                onclick="join('{{room['_id']}}')"
+              >
+                신청하기
+              </button>
+              {% endif %}
+            </div>
+            <!-- 버튼 끝 -->
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

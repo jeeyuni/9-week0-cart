@@ -1,0 +1,128 @@
+{% extends "base.html" %} {% block title %}파티 수정하기{% endblock %}
+{% block content %}
+
+<div class="main">
+    <div class="small-container">
+      <h1 class="title">파티 수정하기</h1>
+      <!-- 폼 시작 -->
+      <form action="/rooms/{{room['_id']}}/modify" method="post">
+        <!-- 제목 -->
+        <div class="form-group row">
+          <label for="fixtitle" class="col-sm-3 col-form-label">제목</label>
+          <div class="col-sm-9">
+            <input type="text" class = "form-control" name="title" id="fixtitle" value="{{room["title"]}}" required/>
+          </div>
+        </div>
+
+        <!-- 장소 -->
+      <div class="form-group row">
+        <label for="fixlocation" class="col-sm-3 col-form-label">장소</label>
+        <div class="col-sm-9">
+          <div class="input-group">
+            <select
+              class="form-control"
+              id="fixlocation"
+              name="location"
+              required
+            >
+              <option class="first-value" disabled value="">
+                장소를 선택하세요
+              </option>
+              <option value="농구코트" {% if "농구코트" == room["location"] %} selected {% endif %}>A-농구코트</option>
+              <option value="숙소동" {% if "숙소동" == room["location"] %} selected {% endif %}>B-숙소동</option>
+              <option value="캠퍼스 정원" {% if "캠퍼스 정원" == room["location"] %} selected {% endif %}>C-캠퍼스 정원</option>
+              <option value="정문" {% if "정문" == room["location"] %} selected {% endif %}>D-정문</option>
+              <option value="주차장" {% if "주차장" == room["location"] %} selected {% endif %}>E-주차장</option>
+            </select>
+            <div class="input-group-append">
+              <button
+                type="button"
+                class="btn btn-map"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                지도보기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">캠퍼스 지도</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-center">
+              <img
+                src="{{url_for('static', filename='map.png')}}"
+                alt="지도 이미지"
+                class="img-fluid"
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+
+        <!-- 시간 -->
+        <div class="form-group row">
+          <label for="fixtime" class="col-sm-3 col-form-label">시간</label>
+          <div class="col-sm-9">
+            <input type="datetime-local" class="form-control" id="fixtime" name="time" value="{{room["time"]}}" required>
+          </div>
+        </div>
+
+        <!-- 인원수 -->
+        <div class="form-group row">
+          <label for="fixmax_count" class="col-sm-3 col-form-label">인원수</label>
+          <div class="col-sm-9">
+             <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
+            <input type="number" class="form-control" name="max_count" id="fixmax_count" value="{{room["max_count"]}}" min="{{room["user_count"]}}">
+          </div>
+        </div>
+
+        <!-- 분류 -->
+        <div class="form-group row">
+          <label for="fixcategory" class="col-sm-3 col-form-label">분류</label>
+          <div class="col-sm-9">
+            <select class="form-control" name="category" id="fixcategory" required>
+            {% for cat in categories %}
+            <option value="{{cat}}" {% if cat == room["category"] %} selected {% endif %}>{{cat}}</option>
+            {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!--  만들기 버튼 온클릭 추가해야함  -->
+        <button type="submit" class="btn btn-outline-success btn-block btn-login">수정하기</button>
+        <a class="btn btn-outline-success btn-block btn-login" href="/users/rooms">뒤로가기</a>
+      </form>
+      <script src="{{url_for('static', filename='formTime.js')}}"></script>
+{% endblock %}
