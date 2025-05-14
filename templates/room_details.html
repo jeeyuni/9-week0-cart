@@ -1,40 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>정글 파티만들기</title>
-  </head>
-  <body>
-    <p>안녕하세요, {{user["name"]}}님!!</p>
-    <a href="/rooms">파티 찾기</a>
-    <a href="/users/rooms">신청한 파티</a>
-    <a href="/rooms/create">파티 만들기</a>
-    <button onclick="logout()">로그아웃</button>
+{% extends "base.html" %} {% block content %}
+<h1>파티 세부사항: {{room["title"]}}</h1>
+<ul>
+  <li>모임이름: {{room["title"]}}</li>
+  <li>카테고리: {{room["category"]}}</li>
+  <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
+  <li>호스트: {{room["host_name"]}}</li>
+  <li>장소: {{room["location"]}}</li>
+  <li>시간: {{room["time"]}}</li>
+</ul>
 
-    <h1>파티 세부사항: {{room["title"]}}</h1>
-    <ul>
-      <li>모임이름: {{room["title"]}}</li>
-      <li>카테고리: {{room["category"]}}</li>
-      <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
-      <li>호스트: {{room["host_name"]}}</li>
-      <li>장소: {{room["location"]}}</li>
-      <li>시간: {{room["time"]}}</li>
-    </ul>
+<h1>참여 인원</h1>
+<ul>
+  {% for user in room["user_details"]%}
+  <li>{{user["name"]}} - {{user["phonenumber"]}}</li>
+  {% endfor %}
+</ul>
 
-    <h1>참여 인원</h1>
-    <ul>
-      {% for user in room["user_details"]%}
-      <li>{{user["name"]}} - {{user["phonenumber"]}}</li>
-      {% endfor %}
-    </ul>
-
-    <a href="/users/rooms">돌아가기</a>
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="/static/app.js"></script>
-  </body>
-</html>
+<a href="/users/rooms">돌아가기</a>
+{% endblock %}

@@ -149,7 +149,7 @@ def home():
 
 @app.route("/users/login")
 def get_login():
-    return render_template("login.html")
+    return render_template("logIn.html")
 
 # 파티 찾기 (GET)
 @app.route("/rooms", methods=["GET"])
