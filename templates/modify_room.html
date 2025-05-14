@@ -10,7 +10,7 @@
         <div class="form-group row">
           <label for="fixtitle" class="col-sm-3 col-form-label">제목</label>
           <div class="col-sm-9">
-            <input type="text" class = "form-control" name="title" id="fixtitle" value="{{room["title"]}}" />
+            <input type="text" class = "form-control" name="title" id="fixtitle" value="{{room["title"]}}" required/>
           </div>
         </div>
 
@@ -18,7 +18,7 @@
         <div class="form-group row">
           <label for="fixlocation" class="col-sm-3 col-form-label">장소</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="fixlocation" name="location">
+            <input type="text" class="form-control" id="fixlocation" name="location" value="{{room["location"]}}" required>
           </div>
         </div>
 
@@ -26,7 +26,7 @@
         <div class="form-group row">
           <label for="fixtime" class="col-sm-3 col-form-label">시간</label>
           <div class="col-sm-9">
-            <input type="datetime-local" class="form-control" id="fixtime" name="time">
+            <input type="datetime-local" class="form-control" id="fixtime" name="time" value="{{room["time"]}}" required>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
           <label for="fixmax_count" class="col-sm-3 col-form-label">인원수</label>
           <div class="col-sm-9">
              <!-- 신청 인원수보다 더 낮게 조절할 수 없음 -->
-            <input type="number" class="form-control" name="max_count" id="fixmax_count" value="{{room[" max_count"]}}" min="{{room[" user_count"]}}" />
+            <input type="number" class="form-control" name="max_count" id="fixmax_count" value="{{room["max_count"]}}" min="{{room["user_count"]}}" required/>
           </div>
         </div>
 
@@ -43,7 +43,7 @@
         <div class="form-group row">
           <label for="fixcategory" class="col-sm-3 col-form-label">분류</label>
           <div class="col-sm-9">
-            <select class="form-control" name="category" id="fixcategory" >
+            <select class="form-control" name="category" id="fixcategory" required>
             {% for cat in categories %}
             <option value="{{cat}}" {% if cat == room["fixcategory"] %} selected {% endif %}>{{cat}}</option>
             {% endfor %}
@@ -55,6 +55,4 @@
         <button type="submit" class="btn btn-light btn-block btn-login">만들기</button>
         <a class="btn btn-light btn-block btn-login" href="/rooms">뒤로가기</a>
       </form>
-
-
 {% endblock %}
