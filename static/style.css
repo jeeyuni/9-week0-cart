@@ -31,6 +31,10 @@ body {
   padding: 50px;
 }
 
+.green {
+  color: rgb(97, 211, 131);
+}
+
 .detail-title {
   text-align: center;
   margin-bottom: 15px;
@@ -57,7 +61,6 @@ body {
 }
 
 .card {
-  width: 18rem;
   margin-bottom: 20px;
 }
 

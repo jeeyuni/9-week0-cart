@@ -37,82 +37,95 @@ def format_time(dt_str):
     formatted = dt.strftime(f"%Y.%m.%d({weekday_kor[dt.weekday()]}) %H:%M")
     return formatted
 
-def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False):
-        pipeline = [
-            # confirmed의 True/False 여부 설정
-            {
-                "$match": {
-                    "confirmed": confirmed,
-                }
-            },
-            # join_user 콜렉션과 조인, 사용자 정보를 가져옴
-            {
-                "$lookup": {
-                    "from": "join_user",
-                    "localField": "_id",
-                    "foreignField": "room_id",
-                    "as": "users_list"
-                }
-            },
-            {
-                "$match": {
-                    "users_list.user_id": ObjectId(g.user["_id"]) if user_check else {"$exists": True}
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "host",
-                    "foreignField": "_id",
-                    "as": "host_id"
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "users_list.user_id",
-                    "foreignField": "_id",
-                    "as": "user_details"
-                }
-            },
-            # 하단 필드 선택
-            {
-                "$project": {
-                    "title": 1,
-                    "category": 1,
-                    "user_count": 1,
-                    "max_count": 1,
-                    "location": 1,
-                    "time": 1,
-                    "host_id": {
-                        "$arrayElemAt": ["$host_id._id", 0]
+def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False, time="future"):
+    now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+    print(now)
+    if time == "past":
+        time_expr = {"$lt": ["$time", now]}
+    elif time == "future":
+        time_expr = {"$gt": ["$time", now]}
+    elif time == "both":
+        time_expr = None
+        
+    pipeline = [
+        # confirmed의 True/False 여부 설정
+        {
+            "$match": {
+                "confirmed": confirmed,
+                **({"$expr": time_expr} if time_expr else {})
+            }
+        },
+        # join_user 콜렉션과 조인, 사용자 정보를 가져옴
+        {
+            "$lookup": {
+                "from": "join_user",
+                "localField": "_id",
+                "foreignField": "room_id",
+                "as": "users_list"
+            }
+        },
+        {
+            "$match": {
+                "users_list.user_id": ObjectId(g.user["_id"]) if user_check else {"$exists": True}
+            }
+        },
+        {
+            "$lookup": {
+                "from": "users",
+                "localField": "host",
+                "foreignField": "_id",
+                "as": "host_id"
+            }
+        },
+        {
+            "$lookup": {
+                "from": "users",
+                "localField": "users_list.user_id",
+                "foreignField": "_id",
+                "as": "user_details"
+            }
+        },
+        # 하단 필드 선택
+        {
+            "$project": {
+                "title": 1,
+                "category": 1,
+                "user_count": 1,
+                "max_count": 1,
+                "location": 1,
+                "time": 1,
+                "host_id": {
+                    "$arrayElemAt": ["$host_id._id", 0]
+                },
+                "user_details": 1,
+                "host_name": {
+                    "$arrayElemAt": ["$host_id.name", 0]
+                },
+                "user_in_room": {
+                "$cond": {
+                    "if": {
+                        "$in": [ObjectId(g.user["_id"]), "$users_list.user_id"]
                     },
-                    "user_details": 1,
-                    "host_name": {
-                        "$arrayElemAt": ["$host_id.name", 0]
-                    },
-                    "user_in_room": {
-                    "$cond": {
-                        "if": {
-                            "$in": [ObjectId(g.user["_id"]), "$users_list.user_id"]
-                        },
-                        "then": True,
-                        "else": False
-                    }
-                }
+                    "then": True,
+                    "else": False
                 }
             }
-        ]
-        
-        # id로 1개만 return
-        if rooms_id is not None:
-            pipeline[0]["$match"]["_id"] = ObjectId(rooms_id)
-            result = list(db.rooms.aggregate(pipeline))
-            return result[0] 
-        # 리스트를 return
-        else:
-            result = list(db.rooms.aggregate(pipeline))
-            return result
+            }
+        },
+        {
+        "$sort": { "time": 1 }
+    }
+    ]
+    
+    # id로 1개만 return
+    if rooms_id is not None:
+        pipeline[0]["$match"]["_id"] = ObjectId(rooms_id)
+        result = list(db.rooms.aggregate(pipeline))
+        return result[0] 
+    # 리스트를 return
+    else:
+        result = list(db.rooms.aggregate(pipeline))
+        return result
         
 # 쿠키 확인해 JWT토큰 확인
 @app.before_request
@@ -171,7 +184,8 @@ def get_rooms():
 def get_user_rooms():
     confirmed = get_rooms_set_confirmed(True, user_check=True)
     not_confirmed = get_rooms_set_confirmed(False, user_check=True)
-    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, user=g.user, format_time=format_time)
+    past = get_rooms_set_confirmed(True, user_check=True, time="past")
+    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, past=past, user=g.user, format_time=format_time)
 
 # 파티 참여 (POST)
 @app.route("/rooms/join", methods=["POST"])
@@ -219,7 +233,7 @@ def exit():
 @app.route("/rooms/<rooms_id>", methods=["GET"])
 def get_room_detail(rooms_id):
     
-    room = get_rooms_set_confirmed(True, rooms_id=rooms_id)
+    room = get_rooms_set_confirmed(True, rooms_id=rooms_id, time="both")
     return render_template("room_details.html", room=room, user=g.user, format_time=format_time)
 
 # 파티 만들기 화면 띄우기 (GET)
@@ -299,7 +313,7 @@ def post_create():
 @app.route("/rooms/<rooms_id>/delete", methods=["POST"])
 def post_delete(rooms_id):
     db.rooms.delete_one({"_id": ObjectId(rooms_id)})
-    db.join_user.delete_many({"_id": ObjectId(rooms_id)})
+    db.join_user.delete_many({"room_id": ObjectId(rooms_id)})
     return redirect(url_for('get_user_rooms'))
 
 # 파티 확정하기
@@ -388,8 +402,6 @@ def login():
 @app.route("/users/logout", methods=["POST"])
 def logout():
     return jsonify({"message": "로그아웃 성공"})
-
-
             
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)

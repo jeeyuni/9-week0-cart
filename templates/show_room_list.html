@@ -2,8 +2,9 @@
 content %}
 
 <div class="main">
-  <div class="container-md">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+  <div class="container-lg">
+    <h2 class="green">모집 중인 파티 ({{not_confirmed|length}})</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       {% for room in not_confirmed %}
       <div class="col">
         <div class="card">
@@ -18,7 +19,10 @@ content %}
               <div>
                 <h5 class="card-title mb-1">
                   {{ room["title"] }} {% if g.user["_id"] == room["host_id"]
-                  %}<span class="badge badge-secondary">호스트</span>{% endif %}
+                  %}<span class="badge badge-secondary">호스트</span>{% elif
+                  room["user_in_room"]%}<span class="badge badge-warning"
+                    >신청됨</span
+                  >{% endif %}
                 </h5>
                 <div style="font-size: 0.9rem">
                   인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
@@ -38,20 +42,28 @@ content %}
 
             <!-- 버튼 -->
             <div class="d-flex justify-content-between gap-2">
-              {%if room["user_in_room"] %}
+              {%if room["user_in_room"] %} {%if g.user["_id"] ==
+              room["host_id"]%}
               <button class="submit btn btn-light w-100" disabled>
-                신청 완료
+                호스트
               </button>
-              {% elif room["user_count"] >= room["max_count"] %}
+              {% else %}
+              <button
+                onclick="exit('{{room['_id']}}')"
+                class="submit btn btn-secondary w-100"
+              >
+                퇴장
+              </button>
+              {% endif %} {% elif room["user_count"] >= room["max_count"] %}
               <button class="submit btn btn-light w-100" disabled>
                 정원 초과
               </button>
               {% else %}
               <button
-                class="submit btn btn-light w-100"
+                class="submit btn btn-success w-100"
                 onclick="join('{{room['_id']}}')"
               >
-                참여하기
+                신청하기
               </button>
               {% endif %}
             </div>
