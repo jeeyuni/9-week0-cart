@@ -10,20 +10,30 @@ content %}
     </h1>
     <ul class="info-list">
       <li><strong>카테고리:</strong> {{room["category"]}}</li>
-      <li>
-        <strong>인원수:</strong> {{room["user_count"]}} / {{room["max_count"]}}
-      </li>
-      <li><strong>호스트:</strong> {{room["host_name"]}}</li>
       <li><strong>장소:</strong> {{room["location"]}}</li>
       <li><strong>시간:</strong> {{format_time(room["time"])}}</li>
     </ul>
 
-    <h4 class="mb-3">참여 인원</h4>
-    <ul>
+    <h4 class="mb-3 green">
+      참여 인원 ({{room["user_count"]}} / {{room["max_count"]}})
+    </h4>
+    <div class="row row-cols-3">
       {% for user in room["user_details"]%}
-      <li>{{user["name"]}} - {{user["phonenumber"]}}</li>
+      <div class="col phone-col">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="card-title">
+              {{user["name"]}} {% if user["_id"] == room["host_id"] %}<span
+                class="badge badge-secondary"
+                >호스트</span
+              >{% endif %}
+            </h6>
+            <p class="card-text">{{format_phoneno(user["phonenumber"])}}</p>
+          </div>
+        </div>
+      </div>
       {% endfor %}
-    </ul>
+    </div>
 
     <a class="btn btn-outline-success btn-block btn-login" href="/users/rooms"
       >뒤로가기</a

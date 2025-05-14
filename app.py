@@ -37,6 +37,10 @@ def format_time(dt_str):
     formatted = dt.strftime(f"%Y.%m.%d({weekday_kor[dt.weekday()]}) %H:%M")
     return formatted
 
+def format_phoneno(phoneno_str):
+    formatted = f"{phoneno_str[:3]}-{phoneno_str[3:7]}-{phoneno_str[7:]}"
+    return formatted
+
 def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False, time="future"):
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
     print(now)
@@ -234,7 +238,7 @@ def exit():
 def get_room_detail(rooms_id):
     
     room = get_rooms_set_confirmed(True, rooms_id=rooms_id, time="both")
-    return render_template("room_details.html", room=room, user=g.user, format_time=format_time)
+    return render_template("room_details.html", room=room, user=g.user, format_time=format_time, format_phoneno=format_phoneno)
 
 # 파티 만들기 화면 띄우기 (GET)
 @app.route("/rooms/create", methods=["GET"])
