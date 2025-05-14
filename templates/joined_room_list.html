@@ -2,7 +2,10 @@
 content %}
 <div class="main">
   <div class="party-container">
-    <h2>확정된 파티</h2>
+    <h2>확정된 파티 ({{confirmed|length}})</h2>
+    {% if confirmed|length == 0 %}
+    <p>😥 확정된 파티가 없습니다.</p>
+    {% else %}
     <div class="card-wrapper">
       {% for room in confirmed %}
       <div class="card">
@@ -15,7 +18,7 @@ content %}
               room["category"] == "외출"%}🚪 {% else %} 🎉 {% endif %}
             </div>
             <div>
-              <h5 class="card-title mb-1">{{ room["title"] }}</h5>
+              <h5 class="card-title mb-1">{{ room["title"] }} {% if g.user["_id"] == room["host_id"] %}<span class="badge badge-secondary">호스트</span>{% endif %}</h5>
               <div style="font-size: 0.9rem">
                 인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
               </div>
@@ -40,73 +43,81 @@ content %}
       </div>
       {% endfor %}
     </div>
+    {% endif %}
 
-    <h2>확정되지 않은 파티</h2>
+    <h2>신청한 파티 ({{not_confirmed|length}})</h2>
+    {% if not_confirmed|length == 0 %}
+    <p>😥 신청하신 파티가 없습니다.</p>
+    <a class="btn btn-light" href="/rooms">파티 찾기</a>
+    <a class="btn btn-light" href="/rooms/create">파티 만들기</a>
+    {% else %}
     <div class="card-wrapper">
       {% for room in not_confirmed %}
       <div class="card">
-        <div class="card-body">
-          <!-- 상단: 이모지 + 파티명 + 인원수 -->
-          <div class="d-flex align-items-center mb-3">
-            <div style="font-size: 2.5rem; margin-right: 10px">
-              {% if room["category"] == "운동"%}🏃 {% elif room["category"] ==
-              "음식"%}🍗 {% elif room["category"] == "공동 구매"%}🛒 {% elif
-              room["category"] == "외출"%}🚪 {% else %} 🎉 {% endif %}
-            </div>
-            <div>
-              <h5 class="card-title mb-1">{{ room["title"] }}</h5>
-              <div style="font-size: 0.9rem">
-                인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
+          <div class="card-body">
+            <!-- 상단: 이모지 + 파티명 + 인원수 -->
+            <div class="d-flex align-items-center mb-3">
+              <div style="font-size: 2.5rem; margin-right: 10px">
+                {% if room["category"] == "운동"%}🏃 {% elif room["category"] ==
+                "음식"%}🍗 {% elif room["category"] == "공동 구매"%}🛒 {% elif
+                room["category"] == "외출"%}🚪 {% else %} 🎉 {% endif %}
+              </div>
+              <div>
+                <h5 class="card-title mb-1">{{ room["title"] }} {% if g.user["_id"] == room["host_id"] %}<span class="badge badge-secondary">호스트</span>{% endif %}</h5>
+                <div style="font-size: 0.9rem">
+                  인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
+                </div>
               </div>
             </div>
-          </div>
-          <!-- 상단 정보 끝 -->
+            <!-- 상단 정보 끝 -->
 
-          <!-- 하단 정보 -->
-          <ul class="card-list">
-            <li>호스트: {{room["host_name"]}}</li>
-            <li>장소: {{ room["location"] }}</li>
-            <li>시간: {{ format_time(room["time"]) }}</li>
-            <li>카테고리: {{ room["category"] }}</li>
-          </ul>
-          <!-- 하단 정보 끝 -->
+            <!-- 하단 정보 -->
+            <ul class="card-list">
+              <li>호스트: {{room["host_name"]}}</li>
+              <li>장소: {{ room["location"] }}</li>
+              <li>시간: {{ format_time(room["time"]) }}</li>
+              <li>카테고리: {{ room["category"] }}</li>
+            </ul>
+            <!-- 하단 정보 끝 -->
 
-          <!-- 버튼 -->
-          <div class="d-flex justify-content-between gap-2">
-            {% if g.user["_id"] == room["host_id"] %}
-            <a
-              class="btn btn-light flex-grow-1"
-              href="/rooms/{{room['_id']}}/modify"
-              >수정</a
-            >
-            <form
-              action="/rooms/{{room['_id']}}/delete"
-              method="post"
-              class="deleteForm flex-grow-1"
-            >
-              <button class="btn btn-light w-100">삭제</button>
-            </form>
-            <form
-              action="/rooms/{{room['_id']}}/confirm"
-              method="post"
-              class="confirmForm flex-grow-1"
-            >
-              <button class="btn btn-light w-100">확정</button>
-            </form>
-            {% else %}
-            <!-- 이용자가 호스트가 아닐 때 -->
-            <button
-              onclick="exit('{{room['_id']}}')"
-              class="btn btn-light w-100"
-            >
-              퇴장
-            </button>
-            {% endif %}
+            <!-- 버튼 -->
+            <div class="d-flex justify-content-between gap-2">
+              {% if g.user["_id"] == room["host_id"] %}
+              <a
+                class="btn btn-light flex-grow-1"
+                href="/rooms/{{room['_id']}}/modify"
+                >수정</a
+              >
+              <form
+                action="/rooms/{{room['_id']}}/delete"
+                method="post"
+                class="deleteForm flex-grow-1"
+              >
+                <button class="btn btn-light w-100">삭제</button>
+              </form>
+              <form
+                action="/rooms/{{room['_id']}}/confirm"
+                method="post"
+                class="confirmForm flex-grow-1"
+              >
+                <button class="btn btn-light w-100">확정</button>
+              </form>
+              {% else %}
+              <!-- 이용자가 호스트가 아닐 때 -->
+              <button
+                onclick="exit('{{room['_id']}}')"
+                class="btn btn-light w-100"
+              >
+                퇴장
+              </button>
+              {% endif %}
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      {% endif %}
     </div>
   </div>
+  {% endblock %}
 </div>
-{% endblock %}

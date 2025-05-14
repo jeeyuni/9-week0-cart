@@ -15,7 +15,10 @@ content %}
               room["category"] == "외출"%}🚪 {% else %} 🎉 {% endif %}
             </div>
             <div>
-              <h5 class="card-title mb-1">{{ room["title"] }}</h5>
+              <h5 class="card-title mb-1">
+                {{ room["title"] }} {% if g.user["_id"] == room["host_id"]
+                %}<span class="badge badge-secondary">호스트</span>{% endif %}
+              </h5>
               <div style="font-size: 0.9rem">
                 인원수: {{ room["user_count"] }} / {{ room["max_count"] }}
               </div>
