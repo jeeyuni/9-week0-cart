@@ -2,8 +2,6 @@ body {
   margin: 0;
   padding-top: 70px;
   font-family: "IBM Plex Sans KR", "Pretendard", sans-serif;
-  justify-content: center;
-  display: flex;
 }
 
 .navbar .nav-link {
@@ -20,16 +18,8 @@ body {
 }
 
 .main {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
   padding: 20px;
   min-height: calc(100vh - 70px);
-}
-
-.party-container {
-  width: 100%;
-  max-width: 900px;
 }
 
 .title {
@@ -47,11 +37,6 @@ body {
   gap: 20px;
 }
 
-.card {
-  max-width: 18rem;
-  margin-bottom: 20px;
-}
-
 .card ul {
   padding-left: 16px;
 }
@@ -60,13 +45,6 @@ body {
   list-style: none;
   padding: 0;
   margin-bottom: 30px;
-}
-
-.card-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
 }
 
 .card {
@@ -99,18 +77,9 @@ a {
   cursor: pointer;
 }
 
-.login-container {
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 550px;
-}
-
-.signup-container {
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 550px;
+.small-container {
+  margin: auto;
+  max-width: 550px;
 }
 
 .info-list {

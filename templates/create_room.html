@@ -1,62 +1,91 @@
 {% extends "base.html" %}{% block title %}파티 만들기{% endblock %}{% block
 content %}
 
- <div class="main">
-    <div class="container">
-      <h1 class="title">파티 만들기</h1>
+<div class="main">
+  <div class="small-container">
+    <h1 class="title">파티 만들기</h1>
 
-      <!-- 폼 시작 -->
-      <form action="/rooms/create" method="post">
-        <!-- 제목 -->
-        <div class="form-group row">
-          <label for="title" class="col-sm-3 col-form-label">제목</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="title" name="title" required>
-          </div>
+    <!-- 폼 시작 -->
+    <form action="/rooms/create" method="post">
+      <!-- 제목 -->
+      <div class="form-group row">
+        <label for="title" class="col-sm-3 col-form-label">제목</label>
+        <div class="col-sm-9">
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+          />
         </div>
+      </div>
 
-        <!-- 장소 -->
-        <div class="form-group row">
-          <label for="location" class="col-sm-3 col-form-label">장소</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="location" name="location" required>
-          </div>
+      <!-- 장소 -->
+      <div class="form-group row">
+        <label for="location" class="col-sm-3 col-form-label">장소</label>
+        <div class="col-sm-9">
+          <input
+            type="text"
+            class="form-control"
+            id="location"
+            name="location"
+            required
+          />
         </div>
+      </div>
 
-        <!-- 시간 -->
-        <div class="form-group row">
-          <label for="time" class="col-sm-3 col-form-label">시간</label>
-          <div class="col-sm-9">
-            <input type="datetime-local" class="form-control" id="time" name="time" required>
-          </div>
+      <!-- 시간 -->
+      <div class="form-group row">
+        <label for="time" class="col-sm-3 col-form-label">시간</label>
+        <div class="col-sm-9">
+          <input
+            type="datetime-local"
+            class="form-control"
+            id="time"
+            name="time"
+            required
+          />
         </div>
+      </div>
 
-        <!-- 인원수 -->
-        <div class="form-group row">
-          <label for="max_count" class="col-sm-3 col-form-label">인원수</label>
-          <div class="col-sm-9">
-            <input type="number" class="form-control" id="max_count" name="max_count" min="2" required>
-          </div>
+      <!-- 인원수 -->
+      <div class="form-group row">
+        <label for="max_count" class="col-sm-3 col-form-label">인원수</label>
+        <div class="col-sm-9">
+          <input
+            type="number"
+            class="form-control"
+            id="max_count"
+            name="max_count"
+            min="2"
+            required
+          />
         </div>
+      </div>
 
-        <!-- 분류 -->
-        <div class="form-group row">
-          <label for="category" class="col-sm-3 col-form-label">분류</label>
-          <div class="col-sm-9">
-            <select class="form-control" id="category" name="category" required>
-              <option>운동</option>
-              <option>음식</option>
-              <option>공동 구매</option>
-              <option>외출</option>
-              <option>기타</option>
-            </select>
-          </div>
+      <!-- 분류 -->
+      <div class="form-group row">
+        <label for="category" class="col-sm-3 col-form-label">분류</label>
+        <div class="col-sm-9">
+          <select class="form-control" id="category" name="category" required>
+            <option>운동</option>
+            <option>음식</option>
+            <option>공동 구매</option>
+            <option>외출</option>
+            <option>기타</option>
+          </select>
         </div>
+      </div>
 
-        <!--  만들기 버튼 온클릭 추가해야함  -->
-        <button type="submit" class="btn btn-light btn-block btn-login">만들기</button>
-        <a class="btn btn-light btn-block btn-login" href="/rooms">뒤로가기</a>
-      </form>
+      <!--  만들기 버튼 온클릭 추가해야함  -->
+      <button type="submit" class="btn btn-light btn-block btn-login">
+        만들기
+      </button>
+      <a class="btn btn-light btn-block btn-login" href="/rooms">뒤로가기</a>
+    </form>
 
-<script src="{{url_for('static', filename='formTime.js')}}"></script>
-{% endblock %}
+    <script src="{{url_for('static', filename='formTime.js')}}"></script>
+    {% endblock %}
+  </div>
+</div>

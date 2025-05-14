@@ -13,50 +13,107 @@
   </head>
 
   <body>
-      <!-- pip install flask-bcrypt pyjwt -->
-      <!-- flask-bcrypt -> 사용자의 비밀번호를 안전하게 해싱하고 비밀번호 검증을 할 수 있게 해주는 패키지 -->
-      <!-- pyjwt -> jwt를 검증하고 사용 -->
-      
-      <div class="signup-container">
+    <!-- pip install flask-bcrypt pyjwt -->
+    <!-- flask-bcrypt -> 사용자의 비밀번호를 안전하게 해싱하고 비밀번호 검증을 할 수 있게 해주는 패키지 -->
+    <!-- pyjwt -> jwt를 검증하고 사용 -->
+
+    <div class="small-container">
       <h1 class="title">회원가입</h1>
       <form>
         <!-- 이름 -->
         <div class="form-group row">
-          <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">이름</label>
+          <label
+            for="colFormLabelSm"
+            class="col-sm-2 col-form-label col-form-label"
+            >이름</label
+          >
           <div class="col-sm-10">
-            <input type="text" class="form-control form-control-sm" id="name" required>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="name"
+              required
+            />
           </div>
         </div>
         <!-- 이메일 -->
         <div class="form-group row">
-          <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">이메일</label>
+          <label
+            for="colFormLabelSm"
+            class="col-sm-2 col-form-label col-form-label"
+            >이메일</label
+          >
           <div class="col-sm-10">
-            <input type="email" class="form-control form-control-sm" id="email" required>
+            <input
+              type="email"
+              class="form-control form-control-sm"
+              id="email"
+              required
+            />
           </div>
         </div>
         <!-- 연락처 -->
         <div class="form-group row">
-          <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">연락처</label>
+          <label
+            for="colFormLabelSm"
+            class="col-sm-2 col-form-label col-form-label"
+            >연락처</label
+          >
           <div class="col-sm-10">
-            <input type="text" class="form-control form-control-sm" id="phonenumber" required>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="phonenumber"
+              required
+            />
           </div>
         </div>
         <!-- 비밀번호 -->
         <div class="form-group row">
-          <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">비밀번호</label>
+          <label
+            for="colFormLabelSm"
+            class="col-sm-2 col-form-label col-form-label"
+            >비밀번호</label
+          >
           <div class="col-sm-10">
-            <input type="password" class="form-control form-control-sm" id="password" required>
+            <input
+              type="password"
+              class="form-control form-control-sm"
+              id="password"
+              required
+            />
           </div>
         </div>
         <!-- 비밀번호 확인 -->
         <div class="form-group row">
-          <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label">비밀번호 확인</label>
+          <label
+            for="colFormLabelSm"
+            class="col-sm-2 col-form-label col-form-label"
+            >비밀번호 확인</label
+          >
           <div class="col-sm-10">
-            <input type="password" class="form-control form-control-sm" id="confirm-password" required>
+            <input
+              type="password"
+              class="form-control form-control-sm"
+              id="confirm-password"
+              required
+            />
           </div>
         </div>
-        <button type="button" class="btn btn-light btn-block btn-login" onclick="register()">회원가입</button>
-        <button type="button" class="btn btn-light btn-block btn-login" onclick="window.location.href='/'">뒤로가기</button>
+        <button
+          type="button"
+          class="btn btn-light btn-block btn-login"
+          onclick="register()"
+        >
+          회원가입
+        </button>
+        <button
+          type="button"
+          class="btn btn-light btn-block btn-login"
+          onclick="window.location.href='/'"
+        >
+          뒤로가기
+        </button>
       </form>
     </div>
 
