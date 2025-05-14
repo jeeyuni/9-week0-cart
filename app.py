@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, g, abort
+from flask import Flask, render_template, request, jsonify, redirect, url_for, g, abort, make_response
 from flask.json.provider import JSONProvider
 from bson import ObjectId
 from flask_bcrypt import Bcrypt
@@ -387,7 +387,7 @@ def login():
 
     user = users_collection.find_one({'email': email})
     if not user:
-        return jsonify({'message': '사용자를 찾을 수 없습니다.'}), 404
+        return jsonify({'message': '사용자를 찾을 수 없습니다.'})
     
     if bcrypt.check_password_hash(user['password'], password):
         # JWT 토큰 발급
@@ -397,15 +397,20 @@ def login():
             # 토큰 유효 시간 = 현재시간을 가지고 옴 + 1시간 
             'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         }, app.config['SECRET_KEY'], algorithm='HS256')
+        
+        resp = make_response(jsonify({'message': '로그인 성공'}))
+        resp.set_cookie("token", token, httponly=True, samesite='Strict', max_age=datetime.timedelta(hours=24))
 
-        return jsonify({'message': '로그인 성공', 'token': token}), 200
+        return resp
     else:
-        return jsonify({'message': '비밀번호가 잘못되었습니다.'}), 400
+        return jsonify({'message': '비밀번호가 잘못되었습니다.'})
     
 # 로그아웃 (POST)
 @app.route("/users/logout", methods=["POST"])
 def logout():
-    return jsonify({"message": "로그아웃 성공"})
+    resp = make_response(jsonify({"message": "로그아웃 성공"}))
+    resp.delete_cookie('token', path='/')
+    return resp
             
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)
