@@ -53,8 +53,6 @@ content %}
     <h2 class="green">신청한 파티 ({{not_confirmed|length}})</h2>
     {% if not_confirmed|length == 0 %}
     <p>😥 신청하신 파티가 없습니다.</p>
-    <a class="btn btn-light" href="/rooms">파티 찾기</a>
-    <a class="btn btn-light" href="/rooms/create">파티 만들기</a>
     {% else %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
       {% for room in not_confirmed %}
