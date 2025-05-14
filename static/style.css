@@ -29,7 +29,8 @@ body {
 
 .party-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
+  justify-content: center;
 }
 
 .title {
@@ -66,7 +67,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .card {

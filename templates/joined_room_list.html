@@ -2,12 +2,18 @@
 content %}
 <div class="main">
   <div class="party-container">
+<<<<<<< Updated upstream
     <h2>확정된 파티 ({{confirmed|length}})</h2>
     {% if confirmed|length == 0 %}
     <p>😥 확정된 파티가 없습니다.</p>
     {% else %}
     <div class="card-wrapper">
+=======
+    <h2>확정된 파티</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+>>>>>>> Stashed changes
       {% for room in confirmed %}
+      <div class="col">
       <div class="card">
         <div class="card-body">
           <!-- 상단: 이모지 + 파티명 + 인원수 -->
@@ -41,10 +47,12 @@ content %}
           </div>
         </div>
       </div>
+      </div>
       {% endfor %}
     </div>
     {% endif %}
 
+<<<<<<< Updated upstream
     <h2>신청한 파티 ({{not_confirmed|length}})</h2>
     {% if not_confirmed|length == 0 %}
     <p>😥 신청하신 파티가 없습니다.</p>
@@ -52,7 +60,12 @@ content %}
     <a class="btn btn-light" href="/rooms/create">파티 만들기</a>
     {% else %}
     <div class="card-wrapper">
+=======
+    <h2>확정되지 않은 파티</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+>>>>>>> Stashed changes
       {% for room in not_confirmed %}
+      <div class="col">
       <div class="card">
           <div class="card-body">
             <!-- 상단: 이모지 + 파티명 + 인원수 -->
@@ -116,7 +129,12 @@ content %}
         </div>
         {% endfor %}
       </div>
+<<<<<<< Updated upstream
       {% endif %}
+=======
+    </div>
+      {% endfor %}
+>>>>>>> Stashed changes
     </div>
   </div>
   {% endblock %}
