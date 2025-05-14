@@ -31,6 +31,15 @@ body {
   padding: 50px;
 }
 
+.detail-title {
+  text-align: center;
+  margin-bottom: 15px;
+  color: rgb(97, 211, 131);
+  font-size: 4rem;
+  font-weight: bold;
+  padding: 30px;
+}
+
 .card-deck {
   display: flex;
   flex-wrap: wrap;
