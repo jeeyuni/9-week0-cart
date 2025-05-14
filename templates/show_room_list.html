@@ -3,9 +3,8 @@ content %}
 
 <div class="main">
   <div class="party-container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
+    <div class="card-wrapper">
       {% for room in not_confirmed %}
-      <div class="col">
       <div class="card">
         <div class="card-body">
           <!-- 상단: 이모지 + 파티명 + 인원수 -->
@@ -57,7 +56,6 @@ content %}
           </div>
           <!-- 버튼 끝 -->
         </div>
-      </div>
       </div>
       {% endfor %}
     </div>
