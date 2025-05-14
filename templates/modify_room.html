@@ -15,12 +15,81 @@
         </div>
 
         <!-- 장소 -->
-        <div class="form-group row">
-          <label for="fixlocation" class="col-sm-3 col-form-label">장소</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="fixlocation" name="location" value="{{room["location"]}}" required>
+      <div class="form-group row">
+        <label for="fixlocation" class="col-sm-3 col-form-label">장소</label>
+        <div class="col-sm-9">
+          <div class="input-group">
+            <select
+              class="form-control"
+              id="fixlocation"
+              name="location"
+              required
+            >
+              <option class="first-value" disabled value="">
+                장소를 선택하세요
+              </option>
+              <option value="농구코트" {% if "농구코트" == room["location"] %} selected {% endif %}>A-농구코트</option>
+              <option value="숙소동" {% if "숙소동" == room["location"] %} selected {% endif %}>B-숙소동</option>
+              <option value="캠퍼스 정원" {% if "캠퍼스 정원" == room["location"] %} selected {% endif %}>C-캠퍼스 정원</option>
+              <option value="정문" {% if "정문" == room["location"] %} selected {% endif %}>D-정문</option>
+              <option value="주차장" {% if "주차장" == room["location"] %} selected {% endif %}>E-주차장</option>
+            </select>
+            <div class="input-group-append">
+              <button
+                type="button"
+                class="btn btn-map"
+                data-toggle="modal"
+                data-target="#exampleModal"
+              >
+                지도보기
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">캠퍼스 지도</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-center">
+              <img
+                src="{{url_for('static', filename='map.png')}}"
+                alt="지도 이미지"
+                class="img-fluid"
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+        
 
         <!-- 시간 -->
         <div class="form-group row">
@@ -45,7 +114,7 @@
           <div class="col-sm-9">
             <select class="form-control" name="category" id="fixcategory" required>
             {% for cat in categories %}
-            <option value="{{cat}}" {% if cat == room["fixcategory"] %} selected {% endif %}>{{cat}}</option>
+            <option value="{{cat}}" {% if cat == room["category"] %} selected {% endif %}>{{cat}}</option>
             {% endfor %}
             </select>
           </div>

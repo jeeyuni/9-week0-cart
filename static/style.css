@@ -94,6 +94,11 @@ a {
   max-width: 550px;
 }
 
+.mid-container {
+  margin: auto;
+  max-width: 650px;
+}
+
 .info-list {
   list-style: none;
   padding: 0;
@@ -109,4 +114,9 @@ a {
 
 .info-list li:last-child {
   border-bottom: none;
+}
+
+.btn-map {
+  background-color: rgb(97, 211, 131);
+  color: white;
 }

@@ -2,7 +2,7 @@
 content %}
 
 <div class="main">
-  <div class="small-container">
+  <div class="mid-container">
     <h1 class="detail-title">
       {% if room["category"] == "운동"%}🏃{% elif room["category"] == "음식"%}🍗
       {% elif room["category"] == "공동 구매"%}🛒 {% elif room["category"] ==
@@ -22,13 +22,14 @@ content %}
       <div class="col phone-col">
         <div class="card">
           <div class="card-body">
-            <h6 class="card-title">
-              {{user["name"]}} {% if user["_id"] == room["host_id"] %}<span
+            <div class="card-text mb-1">
+              <span class="h5">{{user["name"]}}</span>
+              {% if user["_id"] == room["host_id"] %}<span
                 class="badge badge-secondary"
                 >호스트</span
               >{% endif %}
-            </h6>
-            <p class="card-text">{{format_phoneno(user["phonenumber"])}}</p>
+            </div>
+            <div class="card-text">{{format_phoneno(user["phonenumber"])}}</div>
           </div>
         </div>
       </div>
