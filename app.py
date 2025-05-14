@@ -220,7 +220,7 @@ def exit():
 def get_room_detail(rooms_id):
     
     room = get_rooms_set_confirmed(True, rooms_id=rooms_id)
-    return render_template("room_details.html", room=room, user=g.user)
+    return render_template("room_details.html", room=room, user=g.user, format_time=format_time)
 
 # 파티 만들기 화면 띄우기 (GET)
 @app.route("/rooms/create", methods=["GET"])

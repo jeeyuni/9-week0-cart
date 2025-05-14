@@ -1,41 +1,33 @@
-{% extends "base.html" %} {% block title %}파티 세부사항{% endblock %}
-{% blockcontent %}
+{% extends "base.html" %} {% block title %}파티 세부사항{% endblock %} {% block
+content %}
 
 <div class="main">
-    <div class="party-container">
-      <h1 class="title">파티 세부사항: {{room["title"]}}</h1>
-      <div style="font-size: 3rem; margin-right: 10px; padding: 5px; text-align: center;">🎉</div>
-      <ul class="info-list">
-        <li><strong>모임이름:</strong> {{room["title"]}}</li>
-        <li><strong>카테고리:</strong> {{room["category"]}}</li>
-        <li><strong>인원수:</strong> {{room["user_count"]}} / {{room["max_count"]}}</li>
-        <li><strong>호스트:</strong> 작업중</li>
-        <li><strong>장소:</strong> {{room["location"]}}</li>
-        <li><strong>시간:</strong> {{room["time"]}}</li>
-      </ul>
+  <div class="party-container">
+    <h1 class="title">
+      {% if room["category"] == "운동"%}🏃{% elif room["category"] == "음식"%}🍗
+      {% elif room["category"] == "공동 구매"%}🛒 {% elif room["category"] ==
+      "외출"%}🚪 {% else %} 🎉 {% endif %}{{room["title"]}}
+    </h1>
+    <ul class="info-list">
+      <li><strong>카테고리:</strong> {{room["category"]}}</li>
+      <li>
+        <strong>인원수:</strong> {{room["user_count"]}} / {{room["max_count"]}}
+      </li>
+      <li><strong>호스트:</strong> {{room["host_name"]}}</li>
+      <li><strong>장소:</strong> {{room["location"]}}</li>
+      <li><strong>시간:</strong> {{format_time(room["time"])}}</li>
+    </ul>
 
-      <h4 class="mb-3">참여 인원</h4>
-      <p>작업중</p>
+    <h4 class="mb-3">참여 인원</h4>
+    <ul>
+      {% for user in room["user_details"]%}
+      <li>{{user["name"]}} - {{user["phonenumber"]}}</li>
+      {% endfor %}
+    </ul>
 
-      <a class="btn btn-light btn-block btn-login" href="/users/rooms">뒤로가기</a>
-    </div>
-
-<h1>파티 세부사항: {{room["title"]}}</h1>
-<ul>
-  <li>모임이름: {{room["title"]}}</li>
-  <li>카테고리: {{room["category"]}}</li>
-  <li>인원수: {{room["user_count"]}} / {{room["max_count"]}}</li>
-  <li>호스트: {{room["host_name"]}}</li>
-  <li>장소: {{room["location"]}}</li>
-  <li>시간: {{room["time"]}}</li>
-</ul>
-
-<h1>참여 인원</h1>
-<ul>
-  {% for user in room["user_details"]%}
-  <li>{{user["name"]}} - {{user["phonenumber"]}}</li>
-  {% endfor %}
-</ul>
-
-<a href="/users/rooms">돌아가기</a>
-{% endblock %}
+    <a class="btn btn-light btn-block btn-login" href="/users/rooms"
+      >뒤로가기</a
+    >
+  </div>
+  {% endblock %}
+</div>

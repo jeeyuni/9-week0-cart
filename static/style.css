@@ -112,3 +112,20 @@ a {
   height: 100vh;
   width: 550px;
 }
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.info-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1.1rem;
+}
+
+.info-list li:last-child {
+  border-bottom: none;
+}
