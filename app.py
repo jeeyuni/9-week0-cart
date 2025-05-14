@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, g
 from flask.json.provider import JSONProvider
 from bson import ObjectId
 from flask_bcrypt import Bcrypt
+import datetime
 import json
 import jwt
-import datetime
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -30,6 +30,12 @@ class CustomJSONProvider(JSONProvider):
         return json.loads(s, **kwargs)
 
 app.json = CustomJSONProvider(app)
+
+def format_time(dt_str):
+    dt = datetime.datetime.strptime(dt_str, "%Y-%m-%dT%H:%M")
+    weekday_kor = ["월", "화", "수", "목", "금", "토", "일"]
+    formatted = dt.strftime(f"%Y.%m.%d({weekday_kor[dt.weekday()]}) %H:%M")
+    return formatted
 
 def get_rooms_set_confirmed(confirmed, rooms_id= None, user_check=False):
         pipeline = [
@@ -158,14 +164,14 @@ def get_login():
 @app.route("/rooms", methods=["GET"])
 def get_rooms():
     not_confirmed = get_rooms_set_confirmed(False)
-    return render_template("show_room_list.html", not_confirmed=not_confirmed, user=g.user)
+    return render_template("show_room_list.html", not_confirmed=not_confirmed, user=g.user, format_time=format_time)
 
 # 신청한 파티 확인하기 (GET)
 @app.route("/users/rooms", methods=["GET"])
 def get_user_rooms():
     confirmed = get_rooms_set_confirmed(True, user_check=True)
     not_confirmed = get_rooms_set_confirmed(False, user_check=True)
-    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, user=g.user)
+    return render_template("joined_room_list.html", confirmed=confirmed, not_confirmed=not_confirmed, user=g.user, format_time=format_time)
 
 # 파티 참여 (POST)
 @app.route("/rooms/join", methods=["POST"])

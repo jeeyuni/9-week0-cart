@@ -10,6 +10,10 @@ body {
   color: rgb(97, 211, 131);
 }
 
+.navbar .nav-link:hover {
+  color: black;
+}
+
 .navbar .nav-link.active {
   font-weight: bold;
   color: black;

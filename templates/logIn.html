@@ -15,18 +15,46 @@
   <body>
     <div class="login-container">
       <h1 class="title">정글 파티만들기</h1>
-        <form>
-          <div class="form-group">
-            <input type="email" class="form-control" id="email" placeholder="이메일">
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="password" placeholder="비밀번호">
-          </div>
-          <button type="button" class="btn btn-light btn-block btn-login" onclick="login()">로그인</button>
-          <button type="button" class="btn btn-light btn-block btn-signup" onclick="window.location.href='/signup'">회원가입</button>
-        </form>
+      <form>
+        <div class="form-group">
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            placeholder="이메일"
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            placeholder="비밀번호"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn btn-light btn-block btn-login"
+          onclick="login()"
+        >
+          로그인
+        </button>
+        <button
+          type="button"
+          class="btn btn-light btn-block btn-signup"
+          onclick="window.location.href='/signup'"
+        >
+          회원가입
+        </button>
+      </form>
     </div>
 
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/static/app.js"></script>
     <script>
       function login() {
         const email = document.getElementById("email").value;
@@ -61,11 +89,5 @@
         document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
       }
     </script>
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"
-    ></script>
-    <script src="/static/app.js"></script>
   </body>
 </html>
